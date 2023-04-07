@@ -1,14 +1,13 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { LoginForm } from "./auth";
 import LoadingSpinner from "~/components/ui/loading-spinner";
 import { Session } from "next-auth";
 import Image from "next/image";
-import { VscHome } from "react-icons/vsc";
-import { MdOutlineAddBox } from "react-icons/md";
 import { BiAddToQueue, BiLogOut, BiHomeAlt } from "react-icons/bi";
+import PostCreatorDialog from "~/components/post-creator/post-creator-dialog";
 
 const Home: NextPage = () => {
   const { data: sessionData, status } = useSession();
@@ -61,12 +60,7 @@ const Aside: React.FC<{ sessionData: Session }> = ({ sessionData }) => {
             <BiHomeAlt className="text-3xl" /> Home
           </Link>
 
-          <div
-            title="Open post creation"
-            className="flex cursor-pointer items-center gap-3 rounded-full py-2 pl-2 pr-28 text-base hover:bg-slate-50"
-          >
-            <BiAddToQueue className="text-3xl" /> Create
-          </div>
+          <PostCreatorDialog sessionData={sessionData} />
 
           <Link
             title="Profile page"
