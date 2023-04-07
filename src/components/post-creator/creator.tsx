@@ -12,6 +12,7 @@ import {
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
 import DiscardPost from "./discard-post";
+import { createId } from "@paralleldrive/cuid2";
 
 const Creator = ({
   setCreatorOpened,
@@ -22,7 +23,7 @@ const Creator = ({
     "images-upload"
   );
 
-  const [postID, setPostID] = useState<null | string>(null);
+  const [postID, setPostID] = useState<null | string>(createId);
   const [images, setImages] = useState<null | string[]>(null);
   const stepProps = {
     postID,

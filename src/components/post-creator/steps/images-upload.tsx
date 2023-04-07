@@ -2,18 +2,12 @@ import { Button } from "~/components/ui/button";
 import { ChangeEvent } from "react";
 import { useToast } from "~/hooks/use-toast";
 import { supabase } from "~/utils/supabase";
-import { createId } from "@paralleldrive/cuid2";
-import { useState, useEffect } from "react";
 import { env } from "~/env.mjs";
 import { StepProps } from "../post-creator-dialog";
 
 const ImagesUploadStep = ({ stepProps }: StepProps) => {
   const { toast } = useToast();
-  const { setImages, setPostID, postID } = stepProps;
-
-  useEffect(() => {
-    setPostID(createId());
-  }, []);
+  const { setImages, postID } = stepProps;
 
   const handlePhotosUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     const fileList = e.target.files;
@@ -26,8 +20,17 @@ const ImagesUploadStep = ({ stepProps }: StepProps) => {
       });
     }
 
+    if (fileList.length > 10) {
+      return toast({
+        title: "Too many images selected",
+        description: "You can select up to 10 images per post.",
+        duration: 3000,
+        variant: "destructive",
+      });
+    }
+
     const images = [...fileList];
-    const isExtValid = images.some((image) =>
+    const isExtValid = images.every((image) =>
       image.name.match(/\.(jpg|jpeg|png|gif)$/i)
     );
 

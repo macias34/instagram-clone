@@ -43,6 +43,7 @@ const Aside: React.FC<{ sessionData: Session }> = ({ sessionData }) => {
     <div className="flex flex-col justify-between border-r border-slate-300 py-7 pl-5 pr-4">
       <div className="flex flex-col gap-5">
         <Image
+          priority
           width="100"
           height="29"
           alt="Instagram logo"
