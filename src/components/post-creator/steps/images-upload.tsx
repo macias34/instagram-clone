@@ -1,13 +1,11 @@
 import { Button } from "~/components/ui/button";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useEffect } from "react";
 import { useToast } from "~/hooks/use-toast";
-import { supabase } from "~/utils/supabase";
-import { env } from "~/env.mjs";
 import { StepProps } from "../post-creator-dialog";
 
 const ImagesUploadStep = ({ stepProps }: StepProps) => {
   const { toast } = useToast();
-  const { setImages, postID } = stepProps;
+  const { setImages, postID, images } = stepProps;
 
   const handlePhotosUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     const fileList = e.target.files;
@@ -42,21 +40,23 @@ const ImagesUploadStep = ({ stepProps }: StepProps) => {
       });
 
     images.map(async (image) => {
-      const uploadPath = postID + "/" + image.name;
-      const { data, error } = await supabase.storage
-        .from("images")
-        .upload(uploadPath, image);
+      const imageURL = URL.createObjectURL(image);
 
-      if (!data || error)
-        return toast({
-          title: "Unexpected error",
-          description: "Unexpected error occured during image uploading.",
-          duration: 3000,
-          variant: "destructive",
-        });
+      // const uploadPath = postID + "/" + image.name;
+      // const { data, error } = await supabase.storage
+      //   .from("images")
+      //   .upload(uploadPath, image);
 
-      const { path } = data;
-      const imageURL = env.NEXT_PUBLIC_SUPABASE_IMAGES_URL + path;
+      // if (!data || error)
+      //   return toast({
+      //     title: "Unexpected error",
+      //     description: "Unexpected error occured during image uploading.",
+      //     duration: 3000,
+      //     variant: "destructive",
+      //   });
+
+      // const { path } = data;
+      // const imageURL = env.NEXT_PUBLIC_SUPABASE_IMAGES_URL + path;
 
       setImages((prevState) =>
         prevState ? [...prevState, imageURL] : [imageURL]

@@ -12,6 +12,7 @@ const PostContentStep = ({ stepProps }: StepProps) => {
       <div className="relative h-full w-full">
         {images.map((image, index) => (
           <Image
+            key={image}
             src={image}
             priority
             alt="Preview image"

@@ -36,6 +36,14 @@ const Creator = ({
     if (images && images.length > 0) setView("post-content");
   }, [images]);
 
+  useEffect(() => {
+    return () => {
+      if (images && images.length > 0) {
+        images.map((imageURL) => URL.revokeObjectURL(imageURL));
+      }
+    };
+  }, [images]);
+
   return (
     <AlertDialogContent
       className={`gap-0 px-0 py-4 transition-all duration-300 ${
