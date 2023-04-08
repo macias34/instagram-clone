@@ -2,15 +2,17 @@ import { Button } from "~/components/ui/button";
 import { ChangeEvent, useEffect } from "react";
 import { useToast } from "~/hooks/use-toast";
 import { StepProps } from "../post-creator-dialog";
+import { useFormikContext } from "formik";
 
 const ImagesUploadStep = ({ stepProps }: StepProps) => {
   const { toast } = useToast();
   const { setImages, postID, images } = stepProps;
+  const { setFieldValue } = useFormikContext();
 
   const handlePhotosUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     const fileList = e.target.files;
 
-    if (!fileList || !fileList[0] || fileList.length === 0) {
+    if (!fileList || fileList.length === 0) {
       return toast({
         title: "No images were selected",
         description: "You need to select at least one image.",
@@ -57,10 +59,10 @@ const ImagesUploadStep = ({ stepProps }: StepProps) => {
 
       // const { path } = data;
       // const imageURL = env.NEXT_PUBLIC_SUPABASE_IMAGES_URL + path;
-
       setImages((prevState) =>
         prevState ? [...prevState, imageURL] : [imageURL]
       );
+      setFieldValue("images", images);
     });
   };
 

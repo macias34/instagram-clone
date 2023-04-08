@@ -1,18 +1,44 @@
-import { BiAddToQueue } from "react-icons/bi";
 import { Separator } from "../ui/seperator";
-import { Session } from "next-auth";
 import ImagesUploadStep from "./steps/images-upload";
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import PostContentStep from "./steps/post-content";
 import {
-  AlertDialog,
   AlertDialogContent,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "../ui/alert-dialog";
 import DiscardPost from "./discard-post";
 import { createId } from "@paralleldrive/cuid2";
+import { Form, Formik } from "formik";
+import { z } from "zod";
+import { toFormikValidationSchema } from "zod-formik-adapter";
+
+const createPostSchema = z.object({
+  images: z
+    .custom<File>()
+    .array()
+    .min(0, "No images were selected. You need to select at least one image.")
+    .max(
+      10,
+      "Too many images selected. You can select up to 10 images per post."
+    )
+    .refine(
+      (images) =>
+        images.every((image) => image.name.match(/\.(jpg|jpeg|png|gif)$/i)),
+      "Not supported image format. Images must be jpg, jpeg, png or gif."
+    ),
+  caption: z
+    .string()
+    .max(2200, "The caption must be 2200 characters max.")
+    .optional(),
+});
+
+const initialValues = {
+  images: [],
+  caption: "",
+};
+
+export type CreatorValues = typeof initialValues;
 
 const Creator = ({
   setCreatorOpened,
@@ -44,41 +70,58 @@ const Creator = ({
     };
   }, [images]);
 
+  const onCreatePost = (values: CreatorValues) => {
+    console.log(values);
+  };
+
   return (
-    <AlertDialogContent
-      className={`gap-0 px-0 py-4 transition-all duration-300 ${
-        view === "images-upload" ? "max-w-lg" : "max-w-4xl"
-      }`}
+    <Formik
+      initialValues={initialValues}
+      validationSchema={toFormikValidationSchema(createPostSchema)}
+      onSubmit={onCreatePost}
     >
-      <AlertDialogHeader className="relative flex w-full items-center">
-        <div
-          className={`flex w-full flex-row items-center justify-between px-3
+      {({ submitForm }) => (
+        <Form>
+          <AlertDialogContent
+            className={`gap-0 px-0 py-0 pt-4 transition-all duration-300 ${
+              view === "images-upload" ? "max-w-lg" : "max-w-4xl"
+            }`}
+          >
+            <AlertDialogHeader className="relative flex w-full items-center">
+              <div
+                className={`flex w-full flex-row items-center justify-between px-3
              `}
-        >
-          <DiscardPost setCreatorOpened={setCreatorOpened} />
-          <AlertDialogTitle className="absolute left-1/2 top-0 -translate-x-1/2 text-base">
-            Create new post
-          </AlertDialogTitle>
+              >
+                <DiscardPost setCreatorOpened={setCreatorOpened} />
+                <AlertDialogTitle className="absolute left-1/2 top-0 -translate-x-1/2 text-base">
+                  Create new post
+                </AlertDialogTitle>
 
-          {view === "post-content" && (
-            <span className="cursor-pointer font-semibold text-blue-500">
-              Share
-            </span>
-          )}
-        </div>
-        <Separator className="" />
-      </AlertDialogHeader>
+                {view === "post-content" && (
+                  <button
+                    type="submit"
+                    onClick={submitForm}
+                    className="cursor-pointer font-semibold text-blue-500 transition hover:text-blue-800"
+                  >
+                    Share
+                  </button>
+                )}
+              </div>
+              <Separator className="" />
+            </AlertDialogHeader>
 
-      <div className="flex h-[530px] max-w-lg flex-col items-center justify-center gap-7 rounded-md">
-        {view === "images-upload" && <ImagesUploadStep stepProps={stepProps} />}
-        {view === "post-content" && <PostContentStep stepProps={stepProps} />}
-      </div>
-
-      {/*         
-        <DialogFooter>
-          <Button type="submit">Save changes</Button>
-        </DialogFooter> */}
-    </AlertDialogContent>
+            <div className="flex h-[530px] flex-col items-center justify-center gap-7 rounded-md">
+              {view === "images-upload" && (
+                <ImagesUploadStep stepProps={stepProps} />
+              )}
+              {view === "post-content" && (
+                <PostContentStep stepProps={stepProps} />
+              )}
+            </div>
+          </AlertDialogContent>
+        </Form>
+      )}
+    </Formik>
   );
 };
 

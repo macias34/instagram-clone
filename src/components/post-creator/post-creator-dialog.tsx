@@ -28,7 +28,7 @@ export interface StepProps {
 const PostCreatorDialog: React.FC<{ sessionData: Session }> = ({
   sessionData,
 }) => {
-  const [creatorOpened, setCreatorOpened] = useState<boolean>(false);
+  const [creatorOpened, setCreatorOpened] = useState<boolean>(true);
 
   return (
     <AlertDialog open={creatorOpened}>
