@@ -8,37 +8,14 @@ import {
   AlertDialogTitle,
 } from "../ui/alert-dialog";
 import DiscardPost from "./discard-post";
-import { createId } from "@paralleldrive/cuid2";
 import { Form, Formik } from "formik";
 import { z } from "zod";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 
-const createPostSchema = z.object({
-  images: z
-    .custom<File>()
-    .array()
-    .min(0, "No images were selected. You need to select at least one image.")
-    .max(
-      10,
-      "Too many images selected. You can select up to 10 images per post."
-    )
-    .refine(
-      (images) =>
-        images.every((image) => image.name.match(/\.(jpg|jpeg|png|gif)$/i)),
-      "Not supported image format. Images must be jpg, jpeg, png or gif."
-    ),
-  caption: z
-    .string()
-    .max(2200, "The caption must be 2200 characters max.")
-    .optional(),
-});
-
-const initialValues = {
-  images: [],
-  caption: "",
-};
-
-export type CreatorValues = typeof initialValues;
+export interface ImageData {
+  name: string;
+  previewURL: string;
+}
 
 const Creator = ({
   setCreatorOpened,
@@ -48,15 +25,7 @@ const Creator = ({
   const [view, setView] = useState<"images-upload" | "post-content">(
     "images-upload"
   );
-
-  const [postID, setPostID] = useState<null | string>(createId);
-  const [images, setImages] = useState<null | string[]>(null);
-  const stepProps = {
-    postID,
-    setPostID,
-    images,
-    setImages,
-  };
+  const [images, setImages] = useState<ImageData[]>([]);
 
   useEffect(() => {
     if (images && images.length > 0) setView("post-content");
@@ -65,28 +34,54 @@ const Creator = ({
   useEffect(() => {
     return () => {
       if (images && images.length > 0) {
-        images.map((imageURL) => URL.revokeObjectURL(imageURL));
+        images.map((image) => URL.revokeObjectURL(image.previewURL));
       }
     };
   }, [images]);
 
-  const onCreatePost = (values: CreatorValues) => {
-    console.log(values);
+  const createPostSchema = z.object({
+    images: z
+      .custom<File>()
+      .array()
+      .min(0, "No images were selected. You need to select at least one image.")
+      .max(
+        10,
+        "Too many images selected. You can select up to 10 images per post."
+      )
+      .refine(
+        (images) =>
+          images.every((image) => image.name.match(/\.(jpg|jpeg|png|gif)$/i)),
+        "Not supported image format. Images must be jpg, jpeg, png or gif."
+      ),
+    caption: z
+      .string()
+      .max(2200, "The caption must be 2200 characters max.")
+      .optional(),
+  });
+
+  const initialValues = {
+    images: [],
+    caption: "",
   };
 
+  const onCreatePost = async (post: {
+    images: ImageData[];
+    caption: string;
+  }) => {};
+
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={toFormikValidationSchema(createPostSchema)}
-      onSubmit={onCreatePost}
+    <AlertDialogContent
+      className={`gap-0 px-0 py-0 pt-4 transition-all duration-300 ${
+        view === "images-upload" ? "max-w-lg" : "max-w-4xl"
+      }`}
     >
-      {({ submitForm }) => (
-        <Form>
-          <AlertDialogContent
-            className={`gap-0 px-0 py-0 pt-4 transition-all duration-300 ${
-              view === "images-upload" ? "max-w-lg" : "max-w-4xl"
-            }`}
-          >
+      <Formik
+        initialValues={initialValues}
+        validationSchema={toFormikValidationSchema(createPostSchema)}
+        onSubmit={onCreatePost}
+      >
+        {({ submitForm }) => (
+          <Form>
             <AlertDialogHeader className="relative flex w-full items-center">
               <div
                 className={`flex w-full flex-row items-center justify-between px-3
@@ -112,16 +107,14 @@ const Creator = ({
 
             <div className="flex h-[530px] flex-col items-center justify-center gap-7 rounded-md">
               {view === "images-upload" && (
-                <ImagesUploadStep stepProps={stepProps} />
+                <ImagesUploadStep setImages={setImages} />
               )}
-              {view === "post-content" && (
-                <PostContentStep stepProps={stepProps} />
-              )}
+              {view === "post-content" && <PostContentStep images={images} />}
             </div>
-          </AlertDialogContent>
-        </Form>
-      )}
-    </Formik>
+          </Form>
+        )}
+      </Formik>
+    </AlertDialogContent>
   );
 };
 

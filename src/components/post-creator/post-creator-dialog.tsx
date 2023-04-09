@@ -1,33 +1,10 @@
 import { BiAddToQueue } from "react-icons/bi";
-import { Separator } from "../ui/seperator";
-import { Session } from "next-auth";
-import ImagesUploadStep from "./steps/images-upload";
-import { useState, useEffect, Dispatch, SetStateAction } from "react";
-import PostContentStep from "./steps/post-content";
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "../ui/alert-dialog";
-import { ArrowLeft } from "lucide-react";
-import DiscardPost from "./discard-post";
+import { useState, Dispatch, SetStateAction } from "react";
+import { AlertDialog, AlertDialogTrigger } from "../ui/alert-dialog";
 
 import Creator from "./creator";
 
-export interface StepProps {
-  stepProps: {
-    postID: string | null;
-    setPostID: Dispatch<SetStateAction<string | null>>;
-    images: string[] | null;
-    setImages: Dispatch<SetStateAction<string[] | null>>;
-  };
-}
-
-const PostCreatorDialog: React.FC<{ sessionData: Session }> = ({
-  sessionData,
-}) => {
+const PostCreatorDialog = () => {
   const [creatorOpened, setCreatorOpened] = useState<boolean>(false);
 
   return (

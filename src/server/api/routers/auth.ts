@@ -1,6 +1,5 @@
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { credentialsAuthValidationSchema } from "~/pages/auth/sign-up/index";
-import { prisma } from "~/server/db";
 import { TRPCError } from "@trpc/server";
 import { hash } from "bcrypt";
 

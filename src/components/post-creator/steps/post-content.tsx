@@ -1,4 +1,3 @@
-import { StepProps } from "../post-creator-dialog";
 import { useState, ChangeEvent } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
@@ -6,10 +5,8 @@ import { useSession } from "next-auth/react";
 import { Textarea } from "~/components/ui/textarea";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
-import { Field, useFormikContext } from "formik";
-import { CreatorValues } from "../creator";
-import { useEffect } from "react";
-import { useToast } from "~/hooks/use-toast";
+import { Field } from "formik";
+import { ImageData } from "../creator";
 
 interface EmojiData {
   id: string;
@@ -20,9 +17,8 @@ interface EmojiData {
   shortcodes: string;
 }
 
-const PostContentStep = ({ stepProps }: StepProps) => {
+const PostContentStep = ({ images }: { images: ImageData[] }) => {
   const { data: sessionData } = useSession();
-  const { images } = stepProps;
   const [currentPreviewedImage, setCurrentPreviewedImage] = useState(0);
   const [emojiPickerOpened, setEmojiPickerOpened] = useState(false);
   const [caption, setCaption] = useState("");
@@ -39,8 +35,8 @@ const PostContentStep = ({ stepProps }: StepProps) => {
         <div className="relative w-3/5">
           {images.map((image, index) => (
             <Image
-              key={image}
-              src={image}
+              key={image.previewURL}
+              src={image.previewURL}
               priority
               alt="Preview image"
               style={{ objectFit: "cover" }}

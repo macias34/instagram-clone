@@ -1,12 +1,15 @@
 import { Button } from "~/components/ui/button";
-import { ChangeEvent, useEffect } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useEffect } from "react";
 import { useToast } from "~/hooks/use-toast";
-import { StepProps } from "../post-creator-dialog";
 import { useFormikContext } from "formik";
+import { ImageData } from "../creator";
 
-const ImagesUploadStep = ({ stepProps }: StepProps) => {
+const ImagesUploadStep = ({
+  setImages,
+}: {
+  setImages: Dispatch<SetStateAction<ImageData[]>>;
+}) => {
   const { toast } = useToast();
-  const { setImages, postID, images } = stepProps;
   const { setFieldValue } = useFormikContext();
 
   const handlePhotosUpload = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -42,25 +45,14 @@ const ImagesUploadStep = ({ stepProps }: StepProps) => {
       });
 
     images.map(async (image) => {
-      const imageURL = URL.createObjectURL(image);
+      const previewURL = URL.createObjectURL(image);
+      const imageData: ImageData = {
+        name: image.name,
+        previewURL,
+      };
 
-      // const uploadPath = postID + "/" + image.name;
-      // const { data, error } = await supabase.storage
-      //   .from("images")
-      //   .upload(uploadPath, image);
-
-      // if (!data || error)
-      //   return toast({
-      //     title: "Unexpected error",
-      //     description: "Unexpected error occured during image uploading.",
-      //     duration: 3000,
-      //     variant: "destructive",
-      //   });
-
-      // const { path } = data;
-      // const imageURL = env.NEXT_PUBLIC_SUPABASE_IMAGES_URL + path;
       setImages((prevState) =>
-        prevState ? [...prevState, imageURL] : [imageURL]
+        prevState ? [...prevState, imageData] : [imageData]
       );
       setFieldValue("images", images);
     });
