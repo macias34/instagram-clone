@@ -11,7 +11,6 @@ import PostCreatorDialog from "~/components/post-creator/post-creator-dialog";
 
 const Home: NextPage = () => {
   const { data: sessionData, status } = useSession();
-
   if (status === "loading")
     return (
       <div className="flex h-screen w-screen items-center justify-center">
@@ -61,7 +60,7 @@ const Aside: React.FC<{ sessionData: Session }> = ({ sessionData }) => {
             <BiHomeAlt className="text-3xl" /> Home
           </Link>
 
-          <PostCreatorDialog sessionData={sessionData} />
+          <PostCreatorDialog />
 
           <Link
             title="Profile page"

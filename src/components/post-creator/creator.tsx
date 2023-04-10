@@ -11,9 +11,12 @@ import DiscardPost from "./discard-post";
 import { Form, Formik } from "formik";
 import { z } from "zod";
 import { toFormikValidationSchema } from "zod-formik-adapter";
+import { api } from "~/utils/api";
+import { file2Base64 } from "~/utils/files";
 
 export interface ImageData {
   name: string;
+  file: File;
   previewURL: string;
 }
 
@@ -26,6 +29,8 @@ const Creator = ({
     "images-upload"
   );
   const [images, setImages] = useState<ImageData[]>([]);
+
+  const { mutate: upload } = api.post.createPost.useMutation();
 
   useEffect(() => {
     if (images && images.length > 0) setView("post-content");
@@ -67,7 +72,19 @@ const Creator = ({
   const onCreatePost = async (post: {
     images: ImageData[];
     caption: string;
-  }) => {};
+  }) => {
+    upload({
+      images: await Promise.all(
+        images.map(async (image) => {
+          return {
+            file: await file2Base64(image.file),
+            name: image.name,
+          };
+        })
+      ),
+      caption: post.caption,
+    });
+  };
 
   return (
     <AlertDialogContent

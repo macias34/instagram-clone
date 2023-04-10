@@ -49,6 +49,7 @@ const ImagesUploadStep = ({
       const imageData: ImageData = {
         name: image.name,
         previewURL,
+        file: image,
       };
 
       setImages((prevState) =>
