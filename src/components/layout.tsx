@@ -12,7 +12,7 @@ import Avatar from "./profile/avatar";
 const Aside: React.FC<{ sessionData: Session | null }> = ({ sessionData }) => {
   if (!sessionData)
     return (
-      <div className="flex flex-col justify-between border-r border-slate-300 py-7 pl-5 pr-4">
+      <div className="sticky top-0 flex h-screen flex-col justify-between border-r border-slate-300 py-7 pl-5 pr-4">
         <div className="flex flex-col gap-5">
           <Image
             priority
@@ -23,6 +23,31 @@ const Aside: React.FC<{ sessionData: Session | null }> = ({ sessionData }) => {
               "https://1000logos.net/wp-content/uploads/2017/02/Logo-Instagram.png"
             }
           />
+          <nav className="flex flex-col gap-4">
+            <Link
+              title="Home page"
+              href="/"
+              className="flex items-center gap-4 rounded-full py-2 pl-2 pr-28 text-base hover:bg-slate-50"
+            >
+              <svg
+                color="rgb(0, 0, 0)"
+                fill="rgb(0, 0, 0)"
+                height="24"
+                role="img"
+                viewBox="0 0 24 24"
+                width="24"
+              >
+                <path
+                  d="M9.005 16.545a2.997 2.997 0 0 1 2.997-2.997A2.997 2.997 0 0 1 15 16.545V22h7V11.543L12 2 2 11.543V22h7.005Z"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                ></path>
+              </svg>
+              Home
+            </Link>
+          </nav>
         </div>
         <div
           title="Log in"
@@ -37,7 +62,7 @@ const Aside: React.FC<{ sessionData: Session | null }> = ({ sessionData }) => {
   const { user } = sessionData;
 
   return (
-    <div className="flex flex-col justify-between border-r border-slate-300 py-7 pl-5 pr-4">
+    <div className="sticky top-0 flex h-screen flex-col justify-between border-r border-slate-300 py-7 pl-5 pr-4">
       <div className="flex flex-col gap-5">
         <Image
           priority

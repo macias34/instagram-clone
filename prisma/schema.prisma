@@ -18,17 +18,58 @@ model User {
     bio           String?   @db.MediumText
     password      String?
     image         String?
+    posts         Post[]
+    followers     Follower[]
+    followings    Following[]
 }
 
+
+model Follower {
+    id            String    @id @default(cuid())
+    followerId    String?
+    followed      User      @relation(fields: [followedId], references: [id])
+    followedId    String
+    createdAt     DateTime  @default(now())
+    updatedAt     DateTime  @updatedAt
+}
+
+model Following {
+    id            String    @id @default(cuid())
+    followerId    String?
+    followed      User      @relation(fields: [followedId], references: [id])
+    followedId    String
+    createdAt     DateTime  @default(now())
+    updatedAt     DateTime  @updatedAt
+}
 
 model Post {
     id            String    @id @default(cuid())
     caption       String    @db.LongText
+    author        User      @relation(fields: [authorId], references: [id])
     authorId      String    @db.MediumText
     images        Image[]
+    likes         Like[]
+    comments      Comment[]
     createdAt     DateTime  @default(now())
     updatedAt     DateTime  @updatedAt
 }
+
+model Like {
+    id            String    @id @default(cuid())
+    userId        String    
+    post          Post      @relation(fields: [postId], references: [id])
+    postId        String    @db.MediumText
+}
+
+model Comment {
+    id            String    @id @default(cuid())
+    userId        String    
+    content       String    @db.MediumText
+    post          Post      @relation(fields: [postId], references: [id])
+    postId        String    @db.MediumText
+
+}
+
 
 model Image {
     id            String    @id @default(cuid())

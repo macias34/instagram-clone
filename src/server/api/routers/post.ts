@@ -35,6 +35,8 @@ export const postRouter = createTRPCRouter({
           id: true,
           caption: true,
           images: true,
+          likes: true,
+          comments: true,
         },
       });
 
@@ -62,10 +64,20 @@ export const postRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       const { images, caption } = input;
 
+      // await ctx.prisma.image.deleteMany();
+      // await ctx.prisma.post.deleteMany();
+      // await ctx.prisma.user.deleteMany();
+
       const post = await ctx.prisma.post.create({
         data: {
           caption,
           authorId: ctx.session.user.id,
+          likes: {
+            create: [],
+          },
+          comments: {
+            create: [],
+          },
         },
       });
 

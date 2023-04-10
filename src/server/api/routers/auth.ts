@@ -21,6 +21,15 @@ export const authRouter = createTRPCRouter({
         data: {
           name: username,
           username,
+          followers: {
+            create: [],
+          },
+          followings: {
+            create: [],
+          },
+          posts: {
+            create: [],
+          },
           password: await hash(password, 10),
         },
       });

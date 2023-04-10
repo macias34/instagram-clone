@@ -12,6 +12,15 @@ export const userRouter = createTRPCRouter({
         where: {
           username,
         },
+        select: {
+          username: true,
+          posts: true,
+          followers: true,
+          followings: true,
+          bio: true,
+          image: true,
+          name: true,
+        },
       });
 
       if (!user)
@@ -20,11 +29,6 @@ export const userRouter = createTRPCRouter({
           message: "User with this s doesn't exist.",
         });
 
-      return {
-        name: user.name,
-        username: user.username,
-        image: user.image,
-        id: user.id,
-      };
+      return user;
     }),
 });

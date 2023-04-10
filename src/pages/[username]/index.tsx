@@ -11,12 +11,16 @@ import { RouterOutputs, api } from "~/utils/api";
 import { AiFillHeart } from "react-icons/ai";
 import { FaComment } from "react-icons/fa";
 import { HiSquare2Stack } from "react-icons/hi2";
+import { useSession } from "next-auth/react";
+import { BsCameraFill } from "react-icons/bs";
 
 const ProfileHeader = ({
   userData,
 }: {
   userData: RouterOutputs["user"]["getUserPublicDataByUsername"];
 }) => {
+  const { data: sessionData } = useSession();
+
   return (
     <div className="flex gap-24 pl-20 pr-52">
       <Avatar user={userData} size={150} />
@@ -24,30 +28,40 @@ const ProfileHeader = ({
         <div className="flex items-center gap-10">
           <span className="text-lg font-normal">{userData.username}</span>
           <div className="flex gap-2">
-            <Button variant="instagram" size="instagram">
-              Follow
-            </Button>
-            <Button variant="instagram" size="instagram">
-              Message
-            </Button>
+            {sessionData?.user.name === userData.username ? (
+              <Button variant="instagram" size="instagram">
+                Edit profile
+              </Button>
+            ) : (
+              <>
+                <Button variant="instagram" size="instagram">
+                  Follow
+                </Button>
+                <Button variant="instagram" size="instagram">
+                  Message
+                </Button>
+              </>
+            )}
           </div>
         </div>
 
         <div className="flex items-center gap-10">
           <span className="text-base">
-            <span className="font-semibold">3470</span> posts
+            <span className="font-semibold">{userData.posts.length}</span> posts
           </span>
           <span className="text-base">
-            <span className="font-semibold">500</span> followers
+            <span className="font-semibold">{userData.followers.length}</span>{" "}
+            followers
           </span>
           <span className="text-base">
-            <span className="font-semibold">200</span> followings
+            <span className="font-semibold">{userData.followings.length}</span>{" "}
+            followings
           </span>
         </div>
 
         <div className="flex flex-col gap-1 text-sm">
           <span className="font-semibold">{userData.name}</span>
-          <span>Hello im a profesional futbool player :).</span>
+          {userData.bio && <span>{userData.bio}</span>}
         </div>
       </div>
     </div>
@@ -62,6 +76,13 @@ const ProfileFeed = ({
   return (
     <div className="flex h-full grow items-center">
       <div className="flex h-full grow flex-wrap gap-1">
+        {posts.length === 0 && (
+          <div className="flex h-full w-full flex-col items-center justify-center gap-2">
+            <BsCameraFill size="30" />
+            <span className="text-2xl font-semibold">No posts yet</span>
+          </div>
+        )}
+
         {posts.map((post) => (
           <div className="group relative aspect-square w-[33%]">
             <Link className="h-full w-full" href={`/p/${post.id}`}>
@@ -73,17 +94,17 @@ const ProfileFeed = ({
               />
 
               {post.images.length > 1 && (
-                <div className="absolute right-2 top-2 text-white">
+                <div className="absolute right-2 top-2 z-10 text-white">
                   <HiSquare2Stack size="25" />
                 </div>
               )}
 
               <div className="absolute left-0 top-0 hidden h-full w-full items-center justify-center gap-7 bg-[rgba(0,0,0,0.3)] text-lg font-bold text-white group-hover:flex">
                 <span className="flex items-center gap-2">
-                  <AiFillHeart size="25" /> 200
+                  <AiFillHeart size="25" /> {post.likes.length}
                 </span>
                 <span className="flex items-center gap-2">
-                  <FaComment size="20" /> 10
+                  <FaComment size="20" /> {post.comments.length}
                 </span>
               </div>
             </Link>
