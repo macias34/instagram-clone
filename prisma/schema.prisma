@@ -15,6 +15,7 @@ model User {
     id            String    @id @default(cuid())
     name          String?
     username      String?   @unique
+    bio           String?   @db.MediumText
     password      String?
     image         String?
 }

@@ -22,7 +22,7 @@ const config = {
     defaultLocale: "en",
   },
   images: {
-    domains: ["1000logos.net", "thumbs.dreamstime.com", "iaxaqvbtgrqwuxijlvfy.supabase.co"]
+    domains: ["1000logos.net", "scontent-ord5-2.cdninstagram.com", "thumbs.dreamstime.com", "iaxaqvbtgrqwuxijlvfy.supabase.co"]
   }
 };
 export default config;

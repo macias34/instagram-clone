@@ -32,6 +32,7 @@ export const postRouter = createTRPCRouter({
           authorId: user.id,
         },
         select: {
+          id: true,
           caption: true,
           images: true,
         },

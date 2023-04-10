@@ -7,6 +7,7 @@ import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { Field } from "formik";
 import { ImageData } from "../creator";
+import Avatar from "~/components/profile/avatar";
 
 interface EmojiData {
   id: string;
@@ -19,6 +20,8 @@ interface EmojiData {
 
 const PostContentStep = ({ images }: { images: ImageData[] }) => {
   const { data: sessionData } = useSession();
+  if (!sessionData) return <p>Something went wrong with session.</p>;
+
   const [currentPreviewedImage, setCurrentPreviewedImage] = useState(0);
   const [emojiPickerOpened, setEmojiPickerOpened] = useState(false);
   const [caption, setCaption] = useState("");
@@ -72,17 +75,7 @@ const PostContentStep = ({ images }: { images: ImageData[] }) => {
 
         <div className="flex h-full grow flex-col gap-4 pt-4">
           <div className="flex h-fit items-center gap-3 pl-4">
-            <Image
-              alt={`${sessionData?.user.name}'s image picture`}
-              src={
-                sessionData?.user.image
-                  ? sessionData?.user.image
-                  : "https://thumbs.dreamstime.com/b/default-avatar-profile-vector-user-profile-default-avatar-profile-vector-user-profile-profile-179376714.jpg"
-              }
-              width="30"
-              height="30"
-              className="rounded-full border-2 border-slate-300"
-            />
+            <Avatar user={sessionData.user} />
             <span className="text-sm font-semibold">
               {sessionData?.user.name}
             </span>

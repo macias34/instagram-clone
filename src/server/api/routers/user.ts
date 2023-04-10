@@ -3,12 +3,14 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 export const userRouter = createTRPCRouter({
-  getUserByID: publicProcedure
-    .input(z.object({ id: z.string().cuid("User id must be CUID.") }))
+  getUserPublicDataByUsername: publicProcedure
+    .input(z.string())
     .query(async ({ input, ctx }) => {
+      const username = input;
+
       const user = await ctx.prisma.user.findUnique({
         where: {
-          id: input.id,
+          username,
         },
       });
 

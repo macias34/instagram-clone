@@ -7,6 +7,7 @@ import Image from "next/image";
 import { BiLogOut, BiHomeAlt } from "react-icons/bi";
 import PostCreatorDialog from "~/components/post-creator/post-creator-dialog";
 import { FC, PropsWithChildren } from "react";
+import Avatar from "./profile/avatar";
 
 const Aside: React.FC<{ sessionData: Session | null }> = ({ sessionData }) => {
   if (!sessionData)
@@ -26,7 +27,7 @@ const Aside: React.FC<{ sessionData: Session | null }> = ({ sessionData }) => {
         <div
           title="Log in"
           onClick={() => signIn()}
-          className="flex cursor-pointer items-center gap-3 rounded-full py-2 pl-2 pr-28 text-base hover:bg-slate-50"
+          className="flex cursor-pointer items-center gap-4 rounded-full py-2 pl-2 pr-28 text-base hover:bg-slate-50"
         >
           <BiLogOut className="text-3xl" /> Log in
         </div>
@@ -52,9 +53,25 @@ const Aside: React.FC<{ sessionData: Session | null }> = ({ sessionData }) => {
           <Link
             title="Home page"
             href="/"
-            className="flex items-center gap-3 rounded-full py-2 pl-2 pr-28 text-base hover:bg-slate-50"
+            className="flex items-center gap-4 rounded-full py-2 pl-2 pr-28 text-base hover:bg-slate-50"
           >
-            <BiHomeAlt className="text-3xl" /> Home
+            <svg
+              color="rgb(0, 0, 0)"
+              fill="rgb(0, 0, 0)"
+              height="24"
+              role="img"
+              viewBox="0 0 24 24"
+              width="24"
+            >
+              <path
+                d="M9.005 16.545a2.997 2.997 0 0 1 2.997-2.997A2.997 2.997 0 0 1 15 16.545V22h7V11.543L12 2 2 11.543V22h7.005Z"
+                fill="none"
+                stroke="currentColor"
+                strokeLinejoin="round"
+                strokeWidth="2"
+              ></path>
+            </svg>
+            Home
           </Link>
 
           <PostCreatorDialog />
@@ -62,19 +79,9 @@ const Aside: React.FC<{ sessionData: Session | null }> = ({ sessionData }) => {
           <Link
             title="Profile page"
             href={`/${user.name}`}
-            className="flex cursor-pointer items-center gap-3 rounded-full py-2 pl-2 pr-28 text-base hover:bg-slate-50"
+            className="flex cursor-pointer items-center gap-4 rounded-full py-2 pl-2 pr-28 text-base hover:bg-slate-50"
           >
-            <Image
-              alt={`${user.name}'s image picture`}
-              src={
-                user.image
-                  ? user.image
-                  : "https://thumbs.dreamstime.com/b/default-avatar-profile-vector-user-profile-default-avatar-profile-vector-user-profile-profile-179376714.jpg"
-              }
-              width="30"
-              height="30"
-              className="rounded-full border-2 border-slate-300"
-            />
+            <Avatar user={user} />
             Profile
           </Link>
         </nav>
@@ -82,7 +89,7 @@ const Aside: React.FC<{ sessionData: Session | null }> = ({ sessionData }) => {
       <div
         title="Log out"
         onClick={() => signOut()}
-        className="flex cursor-pointer items-center gap-3 rounded-full py-2 pl-2 pr-28 text-base hover:bg-slate-50"
+        className="flex cursor-pointer items-center gap-4 rounded-full py-2 pl-2 pr-28 text-base hover:bg-slate-50"
       >
         <BiLogOut className="text-3xl" /> Log out
       </div>
@@ -109,7 +116,7 @@ const RootLayout: FC<PropsWithChildren> = ({ children }) => {
       </Head>
       <main className="flex min-h-screen">
         <Aside sessionData={sessionData} />
-        {children}
+        <div className="grow">{children}</div>
       </main>
     </>
   );
