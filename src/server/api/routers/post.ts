@@ -37,7 +37,12 @@ export const postRouter = createTRPCRouter({
         },
       });
 
-      return posts;
+      return posts.map((post) => {
+        return {
+          ...post,
+          author: username,
+        };
+      });
     }),
 
   createPost: protectedProcedure
