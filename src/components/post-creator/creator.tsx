@@ -13,6 +13,7 @@ import { z } from "zod";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 import { api } from "~/utils/api";
 import { file2Base64 } from "~/utils/files";
+import { useRouter } from "next/router";
 
 export interface ImageData {
   name: string;
@@ -29,7 +30,7 @@ const Creator = ({
     "images-upload"
   );
   const [images, setImages] = useState<ImageData[]>([]);
-
+  const router = useRouter();
   const { mutate: upload } = api.post.createPost.useMutation();
 
   useEffect(() => {
@@ -73,17 +74,24 @@ const Creator = ({
     images: ImageData[];
     caption: string;
   }) => {
-    upload({
-      images: await Promise.all(
-        images.map(async (image) => {
-          return {
-            file: await file2Base64(image.file),
-            name: image.name,
-          };
-        })
-      ),
-      caption: post.caption,
-    });
+    upload(
+      {
+        images: await Promise.all(
+          images.map(async (image) => {
+            return {
+              file: await file2Base64(image.file),
+              name: image.name,
+            };
+          })
+        ),
+        caption: post.caption,
+      },
+      {
+        onSuccess(post, variables) {
+          router.push("/" + post.id);
+        },
+      }
+    );
   };
 
   return (

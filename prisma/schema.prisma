@@ -22,8 +22,8 @@ model User {
 
 model Post {
     id            String    @id @default(cuid())
-    caption       String
-    authorId      String
+    caption       String    @db.LongText
+    authorId      String    @db.MediumText
     images        Image[]
     createdAt     DateTime  @default(now())
     updatedAt     DateTime  @updatedAt
@@ -31,9 +31,9 @@ model Post {
 
 model Image {
     id            String    @id @default(cuid())
-    src           String    @unique
+    src           String    @db.MediumText
     post          Post      @relation(fields: [postId], references: [id])
-    postId        String 
+    postId        String    @db.MediumText
     createdAt     DateTime  @default(now())
 }
 
