@@ -8,15 +8,20 @@ import ProfileFeed from "~/components/profile/profile-feed";
 
 const ProfilePage: NextPage<{ username: string }> = ({ username }) => {
   const { data: posts, error: postsError } =
-    api.post.getPostsByUsername.useQuery(username);
+    api.post.getPostsByUsername.useQuery(username, { refetchOnMount: true });
 
-  const { data: userData, error: userDataError } =
-    api.user.getUserPublicDataByUsername.useQuery(username);
+  const {
+    data: userData,
+    error: userDataError,
+    refetch,
+  } = api.user.getUserPublicDataByUsername.useQuery(username, {
+    refetchOnMount: true,
+  });
 
   return (
     <RootLayout>
       <div className="flex h-full flex-col gap-14 px-40 py-10">
-        {userData && <ProfileHeader userData={userData} />}
+        {userData && <ProfileHeader userData={userData} refetch={refetch} />}
         <Separator />
         {posts && <ProfileFeed posts={posts} />}
       </div>

@@ -7,23 +7,22 @@ import ListDialog from "./list-dialog";
 
 const ProfileHeader = ({
   userData,
+  refetch,
 }: {
   userData: RouterOutputs["user"]["getUserPublicDataByUsername"];
+  refetch: () => void;
 }) => {
   const { data: sessionData } = useSession();
-
   const { mutate: toggleFollowInDb } =
-    api.user.toggleFollowByUserID.useMutation();
+    api.user.toggleFollowByUserID.useMutation({
+      onSettled() {
+        refetch();
+      },
+    });
   const [isFollowed, setIsFollowed] = useState(
     userData.followers.some((follower) => follower.id === sessionData?.user.id)
   );
-
-  const followersWithoutNestedFollowers = userData.followers.map((follower) => {
-    const { followers: _, ...followersWithoutNestedFollowers } = follower;
-    return followersWithoutNestedFollowers;
-  });
-
-  const [followers, setFollowers] = useState(followersWithoutNestedFollowers);
+  console.log(isFollowed);
 
   const [isDialogOpened, setIsDialogOpened] = useState(false);
   const [dialogMode, setDialogMode] = useState<"followers" | "followings">(
@@ -35,24 +34,6 @@ const ProfileHeader = ({
 
     setIsFollowed((prevState) => !prevState);
     toggleFollowInDb(userData.id);
-
-    if (isFollowed)
-      setFollowers(() =>
-        userData.followers.filter(
-          (follower) => follower.id !== sessionData?.user.id
-        )
-      );
-    else {
-      setFollowers((prevFollowers) => [
-        ...prevFollowers,
-        {
-          id: sessionData.user.id,
-          name: sessionData.user.name!,
-          username: sessionData.user.name!,
-          image: sessionData.user.image!,
-        },
-      ]);
-    }
   };
 
   const showDialog = (mode: typeof dialogMode) => {
@@ -67,13 +48,19 @@ const ProfileHeader = ({
 
   useEffect(() => {
     return () => {
+      setIsFollowed(
+        userData.followers.some(
+          (follower) => follower.id === sessionData?.user.id
+        )
+      );
       if (isDialogOpened) setIsDialogOpened(false);
     };
-  }, [isDialogOpened, userData]);
+  }, [userData.name, isDialogOpened]);
 
   return (
     <>
       <ListDialog
+        refetch={refetch}
         mode={dialogMode}
         isDialogOpened={isDialogOpened}
         setIsDialogOpened={setIsDialogOpened}
@@ -116,7 +103,7 @@ const ProfileHeader = ({
               onClick={() => showDialog("followers")}
               className="cursor-pointer text-base"
             >
-              <span className="font-semibold">{followers.length}</span>{" "}
+              <span className="font-semibold">{userData.followers.length}</span>{" "}
               followers
             </span>
             <span

@@ -25,6 +25,7 @@ const ProfileFeed = ({
           <div key={post.id} className="group relative aspect-square w-[33%]">
             <Link className="h-full w-full" href={`/p/${post.id}`}>
               <Image
+                sizes="300"
                 fill
                 style={{ objectFit: "cover" }}
                 alt=""

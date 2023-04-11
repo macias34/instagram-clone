@@ -8,6 +8,7 @@ import { FC } from "react";
 import { RouterOutputs } from "~/utils/api";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { UseMutateFunction } from "@tanstack/react-query";
 
 interface ListDialogProps {
   followers: RouterOutputs["user"]["getUserPublicDataByUsername"]["followers"];
@@ -15,17 +16,25 @@ interface ListDialogProps {
   isDialogOpened: boolean;
   setIsDialogOpened: Dispatch<SetStateAction<boolean>>;
   mode: "followers" | "followings";
+  refetch: () => void;
 }
 
 const SingleFollower = ({
   follower,
+  refetch,
 }: {
   follower: ListDialogProps["followers"][0];
+  refetch: () => void;
 }) => {
   const { data: sessionData } = useSession();
 
   const { mutate: toggleFollowInDb } =
-    api.user.toggleFollowByUserID.useMutation();
+    api.user.toggleFollowByUserID.useMutation({
+      onSettled() {
+        refetch();
+      },
+    });
+
   const [isFollowed, setIsFollowed] = useState(
     follower.followers.some(
       (follower) => follower.followerId === sessionData?.user.id
@@ -69,8 +78,8 @@ const ListDialog: FC<ListDialogProps> = ({
   isDialogOpened,
   setIsDialogOpened,
   mode,
+  refetch,
 }) => {
-  const { data: sessionData } = useSession();
   return (
     <AlertDialog open={isDialogOpened}>
       <AlertDialogContent className="relative max-w-sm gap-5 px-0 py-0">
@@ -89,7 +98,11 @@ const ListDialog: FC<ListDialogProps> = ({
             <>
               {followers.length > 0 ? (
                 followers.map((follower) => (
-                  <SingleFollower key={follower.id} follower={follower} />
+                  <SingleFollower
+                    refetch={refetch}
+                    key={follower.id}
+                    follower={follower}
+                  />
                 ))
               ) : (
                 <div className="absolute right-1/2 top-1/2 flex w-full -translate-y-1/2 translate-x-1/2 flex-col items-center justify-center gap-3">
@@ -106,7 +119,11 @@ const ListDialog: FC<ListDialogProps> = ({
             <>
               {followings.length > 0 ? (
                 followings.map((following) => (
-                  <SingleFollower key={following.id} follower={following} />
+                  <SingleFollower
+                    refetch={refetch}
+                    key={following.id}
+                    follower={following}
+                  />
                 ))
               ) : (
                 <div className="absolute right-1/2 top-1/2 flex w-full -translate-y-1/2 translate-x-1/2 flex-col items-center justify-center gap-3">
