@@ -14,6 +14,7 @@ import { toFormikValidationSchema } from "zod-formik-adapter";
 import { api } from "~/utils/api";
 import { file2Base64 } from "~/utils/files";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 
 export interface ImageData {
   name: string;
@@ -31,6 +32,7 @@ const Creator = ({
   );
   const [images, setImages] = useState<ImageData[]>([]);
   const router = useRouter();
+  const { data: sessionData } = useSession();
   const { mutate: upload } = api.post.createPost.useMutation();
 
   useEffect(() => {
@@ -88,7 +90,8 @@ const Creator = ({
       },
       {
         onSuccess(post, variables) {
-          router.push("/" + post.id);
+          setCreatorOpened(false);
+          router.push("/" + sessionData?.user.name);
         },
       }
     );
@@ -119,7 +122,7 @@ const Creator = ({
 
                 {view === "post-content" && (
                   <button
-                    type="submit"
+                    type="button"
                     onClick={submitForm}
                     className="cursor-pointer font-semibold text-blue-500 transition hover:text-blue-800"
                   >

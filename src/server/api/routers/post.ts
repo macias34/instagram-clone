@@ -38,6 +38,9 @@ export const postRouter = createTRPCRouter({
           likes: true,
           comments: true,
         },
+        orderBy: {
+          createdAt: "asc",
+        },
       });
 
       return posts.map((post) => {
@@ -63,7 +66,6 @@ export const postRouter = createTRPCRouter({
     )
     .mutation(async ({ input, ctx }) => {
       const { images, caption } = input;
-
       // await ctx.prisma.image.deleteMany();
       // await ctx.prisma.post.deleteMany();
       // await ctx.prisma.user.deleteMany();
@@ -135,6 +137,7 @@ export const postRouter = createTRPCRouter({
           },
         },
       });
+      console.log("posted");
 
       return postWithImages;
     }),

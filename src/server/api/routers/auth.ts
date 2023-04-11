@@ -24,9 +24,6 @@ export const authRouter = createTRPCRouter({
           followers: {
             create: [],
           },
-          followings: {
-            create: [],
-          },
           posts: {
             create: [],
           },

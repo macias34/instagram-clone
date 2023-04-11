@@ -20,22 +20,12 @@ model User {
     image         String?
     posts         Post[]
     followers     Follower[]
-    followings    Following[]
 }
 
 
 model Follower {
     id            String    @id @default(cuid())
-    followerId    String?
-    followed      User      @relation(fields: [followedId], references: [id])
-    followedId    String
-    createdAt     DateTime  @default(now())
-    updatedAt     DateTime  @updatedAt
-}
-
-model Following {
-    id            String    @id @default(cuid())
-    followerId    String?
+    followerId    String
     followed      User      @relation(fields: [followedId], references: [id])
     followedId    String
     createdAt     DateTime  @default(now())
@@ -73,7 +63,7 @@ model Comment {
 
 model Image {
     id            String    @id @default(cuid())
-    src           String    @db.MediumText
+    src           String    @db.MediumText 
     post          Post      @relation(fields: [postId], references: [id])
     postId        String    @db.MediumText
     createdAt     DateTime  @default(now())
