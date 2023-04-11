@@ -10,6 +10,43 @@ import { env } from "~/env.mjs";
 import { Image } from "@prisma/client";
 
 export const postRouter = createTRPCRouter({
+  getPostById: publicProcedure
+    .input(z.string().cuid())
+    .query(async ({ input, ctx }) => {
+      const id = input;
+
+      const post = await ctx.prisma.post.findUnique({
+        where: {
+          id,
+        },
+        include: {
+          images: true,
+        },
+      });
+
+      if (!post)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Post with this id doesn't exist.",
+        });
+
+      const author = await ctx.prisma.user.findUnique({
+        where: {
+          id: post.authorId,
+        },
+
+        select: {
+          name: true,
+          username: true,
+          image: true,
+          posts: true,
+          followers: true,
+        },
+      });
+
+      return { ...post, author };
+    }),
+
   getPostsByUsername: publicProcedure
     .input(z.string())
     .query(async ({ input, ctx }) => {
@@ -24,7 +61,7 @@ export const postRouter = createTRPCRouter({
       if (!user)
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "User with this username doesn't exists.",
+          message: "User with this username doesn't exist.",
         });
 
       const posts = await ctx.prisma.post.findMany({
@@ -66,9 +103,6 @@ export const postRouter = createTRPCRouter({
     )
     .mutation(async ({ input, ctx }) => {
       const { images, caption } = input;
-      // await ctx.prisma.image.deleteMany();
-      // await ctx.prisma.post.deleteMany();
-      // await ctx.prisma.user.deleteMany();
 
       const post = await ctx.prisma.post.create({
         data: {

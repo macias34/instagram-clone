@@ -1,7 +1,16 @@
 import { User } from "next-auth";
 import Image from "next/image";
+import { RouterOutputs } from "~/utils/api";
 
-const Avatar = ({ user, size = 25 }: { user: User; size?: number }) => {
+const Avatar = ({
+  user,
+  size = 25,
+}: {
+  user: User | RouterOutputs["post"]["getPostById"]["author"];
+  size?: number;
+}) => {
+  if (!user) return <div />;
+
   return (
     <Image
       alt={`${user.name}'s image picture`}
