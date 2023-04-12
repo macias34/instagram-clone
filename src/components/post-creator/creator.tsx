@@ -15,6 +15,7 @@ import { api } from "~/utils/api";
 import { file2Base64 } from "~/utils/files";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
+import { useToast } from "~/hooks/use-toast";
 
 export interface ImageData {
   name: string;
@@ -27,10 +28,12 @@ const Creator = ({
 }: {
   setCreatorOpened: Dispatch<SetStateAction<boolean>>;
 }) => {
+  const { toast } = useToast();
   const [view, setView] = useState<"images-upload" | "post-content">(
     "images-upload"
   );
   const [images, setImages] = useState<ImageData[]>([]);
+  const [isShareButtonDisabled, setIsShareButtonDisabled] = useState(false);
   const router = useRouter();
   const { data: sessionData } = useSession();
   const { mutate: upload } = api.post.createPost.useMutation();
@@ -76,6 +79,7 @@ const Creator = ({
     images: ImageData[];
     caption: string;
   }) => {
+    setIsShareButtonDisabled(true);
     upload(
       {
         images: await Promise.all(
@@ -89,9 +93,18 @@ const Creator = ({
         caption: post.caption,
       },
       {
-        onSuccess(post, variables) {
+        onSuccess(post) {
           setCreatorOpened(false);
-          router.push("/" + sessionData?.user.name);
+          router.push("/p/" + post.id);
+        },
+        onError(error) {
+          setIsShareButtonDisabled(false);
+          toast({
+            title: "Something went wrong while adding the post.",
+            description: error.message,
+            duration: 3000,
+            variant: "destructive",
+          });
         },
       }
     );
@@ -124,6 +137,7 @@ const Creator = ({
                   <button
                     type="button"
                     onClick={submitForm}
+                    disabled={isShareButtonDisabled}
                     className="cursor-pointer font-semibold text-blue-500 transition hover:text-blue-800"
                   >
                     Share
