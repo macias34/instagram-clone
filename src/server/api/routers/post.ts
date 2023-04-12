@@ -46,7 +46,43 @@ export const postRouter = createTRPCRouter({
         },
       });
 
-      return { ...post, author };
+      const commentUserIds = post.comments.map((comment) => comment.userId);
+
+      const commenters = await ctx.prisma.user.findMany({
+        where: {
+          id: {
+            in: commentUserIds,
+          },
+        },
+        select: {
+          id: true,
+          name: true,
+          username: true,
+          image: true,
+          followers: {
+            select: {
+              followerId: true,
+            },
+          },
+        },
+      });
+
+      if (!commenters)
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Unexpected error while getting commenters.",
+        });
+
+      const comments = post.comments.map((comment) => {
+        return {
+          ...comment,
+          commentAuthor: commenters.find(
+            (commenter) => commenter.id === comment.userId
+          ),
+        };
+      });
+
+      return { ...post, author, comments };
     }),
 
   getPostsByUsername: publicProcedure
@@ -173,7 +209,6 @@ export const postRouter = createTRPCRouter({
           },
         },
       });
-      console.log("posted");
 
       return postWithImages;
     }),

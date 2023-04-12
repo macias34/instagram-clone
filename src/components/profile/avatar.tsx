@@ -14,6 +14,7 @@ const Avatar = ({
   return (
     <Image
       alt={`${user.name}'s image picture`}
+      style={{ height: size }}
       src={
         user.image
           ? user.image
