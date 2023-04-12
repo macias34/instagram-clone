@@ -18,11 +18,50 @@ interface EmojiData {
   shortcodes: string;
 }
 
+const PreviewImages = ({ images }: { images: ImageData[] }) => {
+  const [currentPreviewedImage, setCurrentPreviewedImage] = useState(0);
+
+  return (
+    <div className="relative w-3/5">
+      {images.map((image, index) => (
+        <Image
+          key={image.previewURL}
+          src={image.previewURL}
+          priority
+          alt="Preview image"
+          style={{ objectFit: "cover" }}
+          className={`${
+            currentPreviewedImage !== index && "invisible"
+          } rounded-bl-lg brightness-110`}
+          fill
+        />
+      ))}
+
+      {currentPreviewedImage < images.length - 1 && (
+        <div
+          onClick={() => setCurrentPreviewedImage((prevState) => prevState + 1)}
+          className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-[rgba(0,0,0,0.65)] transition hover:bg-[rgba(0,0,0,0.5)]"
+        >
+          <ChevronRight className="text-white" />
+        </div>
+      )}
+
+      {currentPreviewedImage !== 0 && (
+        <div
+          onClick={() => setCurrentPreviewedImage((prevState) => prevState - 1)}
+          className="absolute left-2 top-1/2 flex h-8 w-8 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-[rgba(0,0,0,0.65)] transition hover:bg-[rgba(0,0,0,0.5)]"
+        >
+          <ChevronLeft className="text-white" />
+        </div>
+      )}
+    </div>
+  );
+};
+
 const PostContentStep = ({ images }: { images: ImageData[] }) => {
   const { data: sessionData } = useSession();
   if (!sessionData) return <p>Something went wrong with session.</p>;
 
-  const [currentPreviewedImage, setCurrentPreviewedImage] = useState(0);
   const [emojiPickerOpened, setEmojiPickerOpened] = useState(false);
   const [caption, setCaption] = useState("");
 
@@ -35,44 +74,7 @@ const PostContentStep = ({ images }: { images: ImageData[] }) => {
   if (images && images.length > 0)
     return (
       <div className="flex h-full w-full">
-        <div className="relative w-3/5">
-          {images.map((image, index) => (
-            <Image
-              key={image.previewURL}
-              src={image.previewURL}
-              priority
-              alt="Preview image"
-              style={{ objectFit: "cover" }}
-              className={`${
-                currentPreviewedImage !== index && "invisible"
-              } rounded-bl-lg brightness-110`}
-              fill
-            />
-          ))}
-
-          {currentPreviewedImage < images.length - 1 && (
-            <div
-              onClick={() =>
-                setCurrentPreviewedImage((prevState) => prevState + 1)
-              }
-              className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-[rgba(0,0,0,0.65)] transition hover:bg-[rgba(0,0,0,0.5)]"
-            >
-              <ChevronRight className="text-white" />
-            </div>
-          )}
-
-          {currentPreviewedImage !== 0 && (
-            <div
-              onClick={() =>
-                setCurrentPreviewedImage((prevState) => prevState - 1)
-              }
-              className="absolute left-2 top-1/2 flex h-8 w-8 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-[rgba(0,0,0,0.65)] transition hover:bg-[rgba(0,0,0,0.5)]"
-            >
-              <ChevronLeft className="text-white" />
-            </div>
-          )}
-        </div>
-
+        <PreviewImages images={images} />
         <div className="flex h-full grow flex-col gap-4 pt-4">
           <div className="flex h-fit items-center gap-3 pl-4">
             <Avatar user={sessionData.user} />

@@ -29,6 +29,7 @@
     "class-variance-authority": "^0.5.1",
     "clsx": "^1.2.1",
     "cmdk": "^0.2.0",
+    "dayjs": "^1.11.7",
     "emoji-mart": "^5.5.2",
     "emoji-picker-react": "^4.4.8",
     "fetch-blob": "^3.2.0",
