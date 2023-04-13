@@ -47,14 +47,12 @@ const ProfileHeader = ({
   };
 
   useEffect(() => {
-    return () => {
-      setIsFollowed(
-        userData.followers.some(
-          (follower) => follower.id === sessionData?.user.id
-        )
-      );
-      if (isDialogOpened) setIsDialogOpened(false);
-    };
+    setIsFollowed(
+      userData.followers.some(
+        (follower) => follower.id === sessionData?.user.id
+      )
+    );
+    if (isDialogOpened) setIsDialogOpened(false);
   }, [userData.name, isDialogOpened]);
 
   return (
