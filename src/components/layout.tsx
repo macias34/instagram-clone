@@ -4,7 +4,6 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import LoadingSpinner from "~/components/ui/loading-spinner";
 import { Session } from "next-auth";
 import Image from "next/image";
-import { BiLogOut, BiHomeAlt } from "react-icons/bi";
 import PostCreatorDialog from "~/components/post-creator/post-creator-dialog";
 import { FC, PropsWithChildren } from "react";
 import Avatar from "./profile/avatar";
@@ -54,7 +53,7 @@ const Aside: React.FC<{ sessionData: Session | null }> = ({ sessionData }) => {
           onClick={() => signIn()}
           className="flex cursor-pointer items-center gap-4 rounded-full py-2 pl-2 pr-28 text-base hover:bg-slate-50"
         >
-          <BiLogOut className="text-3xl" /> Log in
+          Log in
         </div>
       </div>
     );
@@ -116,7 +115,7 @@ const Aside: React.FC<{ sessionData: Session | null }> = ({ sessionData }) => {
         onClick={() => signOut()}
         className="flex cursor-pointer items-center gap-4 rounded-full py-2 pl-2 pr-28 text-base hover:bg-slate-50"
       >
-        <BiLogOut className="text-3xl" /> Log out
+        Log out
       </div>
     </div>
   );
@@ -130,7 +129,6 @@ const RootLayout: FC<PropsWithChildren> = ({ children }) => {
         <LoadingSpinner />
       </div>
     );
-  // if (!sessionData) return <LoginForm />;
 
   return (
     <>
