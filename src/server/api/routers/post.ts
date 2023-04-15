@@ -256,4 +256,86 @@ export const postRouter = createTRPCRouter({
 
       return postWithImages;
     }),
+
+  deletePostById: protectedProcedure
+    .input(z.string().cuid())
+    .mutation(async ({ input, ctx }) => {
+      const postId = input;
+
+      const post = await ctx.prisma.post.findUnique({
+        where: {
+          id: postId,
+        },
+      });
+
+      if (!post) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Post with this id couldn't be found.",
+        });
+      }
+
+      if (post.authorId !== ctx.session.user.id) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You're not authorized to do it.",
+        });
+      }
+
+      await ctx.prisma.like
+        .deleteMany({
+          where: {
+            postId,
+          },
+        })
+        .catch(
+          () =>
+            new TRPCError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: "Something went wrong while deleting the post",
+            })
+        );
+
+      await ctx.prisma.comment
+        .deleteMany({
+          where: {
+            postId,
+          },
+        })
+        .catch(
+          () =>
+            new TRPCError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: "Something went wrong while deleting the post",
+            })
+        );
+
+      await ctx.prisma.image
+        .deleteMany({
+          where: {
+            postId,
+          },
+        })
+        .catch(
+          () =>
+            new TRPCError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: "Something went wrong while deleting the post",
+            })
+        );
+
+      await ctx.prisma.post
+        .delete({
+          where: {
+            id: postId,
+          },
+        })
+        .catch(
+          () =>
+            new TRPCError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: "Something went wrong while deleting the post",
+            })
+        );
+    }),
 });

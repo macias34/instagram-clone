@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Avatar from "~/components/profile/avatar";
 import { api } from "~/utils/api";
 import { PostProps } from "../post-content";
-Link;
+import DeletePost from "./post-header/delete-post";
 
 const PostHeader = ({ post }: PostProps) => {
   const { data: sessionData } = useSession();
@@ -61,7 +61,7 @@ const PostHeader = ({ post }: PostProps) => {
         )}
       </div>
 
-      <button className="text-sm text-red-500">Delete post</button>
+      <DeletePost post={post} />
     </div>
   );
 };
