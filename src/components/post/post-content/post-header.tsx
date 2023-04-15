@@ -34,30 +34,34 @@ const PostHeader = ({ post }: PostProps) => {
   }, [sessionData]);
 
   return (
-    <div className="flex items-center gap-3 border-b border-b-slate-200 px-3.5 py-3.5 text-sm  font-semibold">
-      <Avatar user={post.author} size={32} />
-      <Link href={`/${post.author?.username}`}>
-        <span>{post.author?.username}</span>
-      </Link>
-      {post.authorId !== sessionData?.user.id && (
-        <>
-          {isFollowed ? (
-            <span
-              onClick={toggleFollow}
-              className="cursor-pointer text-slate-800 hover:text-slate-400"
-            >
-              Following
-            </span>
-          ) : (
-            <span
-              onClick={toggleFollow}
-              className="cursor-pointer text-blue-600 hover:text-slate-700"
-            >
-              Follow
-            </span>
-          )}
-        </>
-      )}
+    <div className="flex items-center justify-between border-b border-b-slate-200 px-3.5 py-3.5 text-sm  font-semibold">
+      <div className="flex items-center gap-3">
+        <Avatar user={post.author} size={32} />
+        <Link href={`/${post.author?.username}`}>
+          <span>{post.author?.username}</span>
+        </Link>
+        {post.authorId !== sessionData?.user.id && (
+          <>
+            {isFollowed ? (
+              <span
+                onClick={toggleFollow}
+                className="cursor-pointer text-slate-800 hover:text-slate-400"
+              >
+                Following
+              </span>
+            ) : (
+              <span
+                onClick={toggleFollow}
+                className="cursor-pointer text-blue-600 hover:text-slate-700"
+              >
+                Follow
+              </span>
+            )}
+          </>
+        )}
+      </div>
+
+      <button className="text-sm text-red-500">Delete post</button>
     </div>
   );
 };

@@ -5,13 +5,12 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import ListDialog from "./list-dialog";
 
-const ProfileHeader = ({
-  userData,
-  refetch,
-}: {
+interface ProfileHeader {
   userData: RouterOutputs["user"]["getUserPublicDataByUsername"];
   refetch: () => void;
-}) => {
+}
+
+const ProfileHeader = ({ userData, refetch }: ProfileHeader) => {
   const { data: sessionData } = useSession();
   const { mutate: toggleFollowInDb } =
     api.user.toggleFollowByUserID.useMutation({
@@ -22,7 +21,6 @@ const ProfileHeader = ({
   const [isFollowed, setIsFollowed] = useState(
     userData.followers.some((follower) => follower.id === sessionData?.user.id)
   );
-  console.log(isFollowed);
 
   const [isDialogOpened, setIsDialogOpened] = useState(false);
   const [dialogMode, setDialogMode] = useState<"followers" | "followings">(
@@ -52,8 +50,7 @@ const ProfileHeader = ({
         (follower) => follower.id === sessionData?.user.id
       )
     );
-    if (isDialogOpened) setIsDialogOpened(false);
-  }, [userData.name, isDialogOpened]);
+  }, [userData.name]);
 
   return (
     <>

@@ -3,9 +3,49 @@ import { PostProps } from "../post-content";
 import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
 import { useSession } from "next-auth/react";
-import { api } from "~/utils/api";
+import { RouterOutputs, api } from "~/utils/api";
+import { Session } from "next-auth";
 
 dayjs.extend(relativeTime);
+
+interface Comment {
+  sessionData: Session | null;
+  postId: string;
+  comment: RouterOutputs["post"]["getPostById"]["comments"][0];
+  deleteComment: (commentId: string) => void;
+}
+
+const Comment = ({ comment, deleteComment, postId, sessionData }: Comment) => {
+  return (
+    <div key={comment.id} className="flex w-[95%] gap-3">
+      <Avatar user={comment} size={32} />
+      <div className="flex flex-col gap-1">
+        <span className="break-all">
+          <span className="mr-1.5 w-fit font-medium">
+            {comment.commentAuthor?.username}
+          </span>
+          <span>{comment.content}</span>
+        </span>
+
+        <div className="flex gap-3 text-xs font-semibold">
+          <span className="text-slate-500">
+            {dayjs(comment.createdAt).fromNow()}
+          </span>
+
+          {sessionData?.user.id === comment.userId &&
+            !(comment.id === postId) && (
+              <button
+                onClick={() => deleteComment(comment.id)}
+                className="text-red-500 hover:text-red-600"
+              >
+                Delete
+              </button>
+            )}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const PostComments = ({ post, refetch }: PostProps) => {
   const { data: sessionData } = useSession();
@@ -25,32 +65,13 @@ const PostComments = ({ post, refetch }: PostProps) => {
       {post.comments.length > 0 ? (
         <>
           {post.comments.map((comment) => (
-            <div key={comment.id} className="flex w-[95%] gap-3">
-              <Avatar user={post.author} size={32} />
-              <div className="flex flex-col gap-1">
-                <span className="break-all">
-                  <span className="mr-1.5 w-fit font-medium">
-                    {comment.commentAuthor?.username}
-                  </span>
-                  <span>{comment.content}</span>
-                </span>
-
-                <div className="flex gap-3 text-xs font-semibold">
-                  <span className="text-slate-500">
-                    {dayjs(comment.createdAt).fromNow()}
-                  </span>
-
-                  {sessionData?.user.id === comment.userId && (
-                    <button
-                      onClick={() => deleteComment(comment.id)}
-                      className="text-red-500 hover:text-red-600"
-                    >
-                      Delete
-                    </button>
-                  )}
-                </div>
-              </div>
-            </div>
+            <Comment
+              key={comment.id}
+              comment={comment}
+              deleteComment={deleteComment}
+              sessionData={sessionData}
+              postId={post.id}
+            />
           ))}
         </>
       ) : (

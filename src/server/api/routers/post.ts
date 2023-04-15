@@ -8,6 +8,7 @@ import { z } from "zod";
 import { supabase } from "~/server/db";
 import { env } from "~/env.mjs";
 import { Image } from "@prisma/client";
+import { RouterOutputs } from "~/utils/api";
 
 export const postRouter = createTRPCRouter({
   getPostById: publicProcedure
@@ -43,11 +44,18 @@ export const postRouter = createTRPCRouter({
           image: true,
           posts: true,
           followers: true,
+          id: true,
         },
       });
 
-      const commentUserIds = post.comments.map((comment) => comment.userId);
+      if (!author) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Author of this post wasn't found.",
+        });
+      }
 
+      const commentUserIds = post.comments.map((comment) => comment.userId);
       const commenters = await ctx.prisma.user.findMany({
         where: {
           id: {
@@ -82,7 +90,43 @@ export const postRouter = createTRPCRouter({
         };
       });
 
-      return { ...post, author, comments };
+      const description: (typeof comments)[0] = {
+        commentAuthor: author,
+        content: post.caption,
+        id: post.id,
+        postId: post.id,
+        createdAt: post.createdAt,
+        updatedAt: post.updatedAt,
+        userId: post.authorId,
+      };
+
+      const likerIds = post.likes.map((like) => like.userId);
+
+      const likers = await ctx.prisma.user.findMany({
+        where: {
+          id: {
+            in: likerIds,
+          },
+        },
+        select: {
+          id: true,
+          name: true,
+          username: true,
+          image: true,
+          followers: {
+            select: {
+              followerId: true,
+            },
+          },
+        },
+      });
+
+      return {
+        ...post,
+        author,
+        comments: [description, ...comments],
+        likers,
+      };
     }),
 
   getPostsByUsername: publicProcedure
