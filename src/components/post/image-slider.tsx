@@ -10,7 +10,7 @@ const ImageSlider = ({
 }) => {
   const [currentPreviewedImage, setCurrentPreviewedImage] = useState(0);
   return (
-    <div className="relative aspect-square h-full">
+    <div className="relative aspect-square h-full w-full">
       {images.map((image, index) => (
         <Image
           key={image.id}
@@ -20,7 +20,7 @@ const ImageSlider = ({
           style={{ objectFit: "cover" }}
           className={`${
             currentPreviewedImage !== index && "invisible"
-          }  brightness-110`}
+          } brightness-110`}
           fill
         />
       ))}

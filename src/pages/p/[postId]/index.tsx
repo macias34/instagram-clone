@@ -17,10 +17,14 @@ const PostPage: NextPage<{ postId: string }> = ({ postId }) => {
 
   return (
     <RootLayout>
-      <div className="flex h-full w-full flex-col gap-14 px-40 py-10">
-        <div className="flex h-[600px] border border-slate-300">
-          <ImageSlider images={post.images} />
-          <PostContent post={post} refetch={refetch} />
+      <div className="flex h-full w-full flex-col items-center justify-center gap-14 px-40 py-10">
+        <div className="flex w-full border border-slate-300">
+          <div className="w-3/5">
+            <ImageSlider images={post.images} />
+          </div>
+          <div className="w-2/5">
+            <PostContent post={post} refetch={refetch} />
+          </div>
         </div>
       </div>
     </RootLayout>

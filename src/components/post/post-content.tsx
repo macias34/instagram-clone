@@ -11,7 +11,7 @@ export interface PostProps {
 
 const PostContent = ({ post, refetch }: PostProps) => {
   return (
-    <div className="flex w-[365px] flex-col">
+    <div className="flex h-full flex-col">
       <PostHeader post={post} refetch={refetch} />
       <PostComments post={post} refetch={refetch} />
       <PostStats post={post} refetch={refetch} />

@@ -61,7 +61,7 @@ const PostComments = ({ post, refetch }: PostProps) => {
   };
 
   return (
-    <div className="scrollbar-hide relative flex h-[63%] w-full flex-col gap-5 overflow-x-auto border-b border-b-slate-200 px-3.5 py-3.5 text-sm">
+    <div className="scrollbar-hide relative flex h-96 w-full flex-col gap-5 overflow-x-auto border-b border-b-slate-200 px-3.5 py-3.5 text-sm">
       {post.comments.length > 0 ? (
         <>
           {post.comments.map((comment) => (
