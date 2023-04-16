@@ -5,13 +5,14 @@ import LoadingSpinner from "~/components/ui/loading-spinner";
 import { Session } from "next-auth";
 import Image from "next/image";
 import PostCreatorDialog from "~/components/post-creator/post-creator-dialog";
-import { FC, PropsWithChildren } from "react";
+import { FC, PropsWithChildren, useState } from "react";
 import Avatar from "./profile/avatar";
+import Search from "./home/search";
 
 const Aside: React.FC<{ sessionData: Session | null }> = ({ sessionData }) => {
-  if (!sessionData)
-    return (
-      <div className="sticky top-0 flex h-screen flex-col justify-between border-r border-slate-300 py-7 pl-5 pr-4">
+  return (
+    <div className="sticky top-0 z-50 flex h-screen flex-col justify-between border-r border-slate-300 ">
+      <div className="relative z-50 flex h-full w-full flex-col justify-between py-7 pl-5 pr-4">
         <div className="flex flex-col gap-5">
           <Image
             priority
@@ -22,6 +23,7 @@ const Aside: React.FC<{ sessionData: Session | null }> = ({ sessionData }) => {
               "https://1000logos.net/wp-content/uploads/2017/02/Logo-Instagram.png"
             }
           />
+
           <nav className="flex flex-col gap-4">
             <Link
               title="Home page"
@@ -46,76 +48,29 @@ const Aside: React.FC<{ sessionData: Session | null }> = ({ sessionData }) => {
               </svg>
               Home
             </Link>
+
+            <Search />
+            {sessionData && <PostCreatorDialog />}
+
+            {sessionData && (
+              <Link
+                title="Profile page"
+                href={`/${sessionData.user.name}`}
+                className="flex cursor-pointer items-center gap-4 rounded-full py-2 pl-2 pr-28 text-base hover:bg-slate-50"
+              >
+                <Avatar user={sessionData.user} />
+                Profile
+              </Link>
+            )}
           </nav>
         </div>
         <div
-          title="Log in"
-          onClick={() => signIn()}
+          title={sessionData ? "Log out" : "Log in"}
+          onClick={() => (sessionData ? signOut() : signIn())}
           className="flex cursor-pointer items-center gap-4 rounded-full py-2 pl-2 pr-28 text-base hover:bg-slate-50"
         >
-          Log in
+          {sessionData ? "Log out" : "Log in"}
         </div>
-      </div>
-    );
-
-  const { user } = sessionData;
-
-  return (
-    <div className="sticky top-0 flex h-screen flex-col justify-between border-r border-slate-300 py-7 pl-5 pr-4">
-      <div className="flex flex-col gap-5">
-        <Image
-          priority
-          width="100"
-          height="29"
-          alt="Instagram logo"
-          src={
-            "https://1000logos.net/wp-content/uploads/2017/02/Logo-Instagram.png"
-          }
-        />
-
-        <nav className="flex flex-col gap-4">
-          <Link
-            title="Home page"
-            href="/"
-            className="flex items-center gap-4 rounded-full py-2 pl-2 pr-28 text-base hover:bg-slate-50"
-          >
-            <svg
-              color="rgb(0, 0, 0)"
-              fill="rgb(0, 0, 0)"
-              height="24"
-              role="img"
-              viewBox="0 0 24 24"
-              width="24"
-            >
-              <path
-                d="M9.005 16.545a2.997 2.997 0 0 1 2.997-2.997A2.997 2.997 0 0 1 15 16.545V22h7V11.543L12 2 2 11.543V22h7.005Z"
-                fill="none"
-                stroke="currentColor"
-                strokeLinejoin="round"
-                strokeWidth="2"
-              ></path>
-            </svg>
-            Home
-          </Link>
-
-          <PostCreatorDialog />
-
-          <Link
-            title="Profile page"
-            href={`/${user.name}`}
-            className="flex cursor-pointer items-center gap-4 rounded-full py-2 pl-2 pr-28 text-base hover:bg-slate-50"
-          >
-            <Avatar user={user} />
-            Profile
-          </Link>
-        </nav>
-      </div>
-      <div
-        title="Log out"
-        onClick={() => signOut()}
-        className="flex cursor-pointer items-center gap-4 rounded-full py-2 pl-2 pr-28 text-base hover:bg-slate-50"
-      >
-        Log out
       </div>
     </div>
   );

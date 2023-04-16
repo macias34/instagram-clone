@@ -20,7 +20,7 @@ const ImageSlider = ({
           style={{ objectFit: "cover" }}
           className={`${
             currentPreviewedImage !== index && "invisible"
-          } brightness-110`}
+          } -z-10 brightness-110`}
           fill
         />
       ))}
