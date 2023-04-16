@@ -11,10 +11,12 @@ export interface PostProps {
 
 const PostContent = ({ post, refetch }: PostProps) => {
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full grow flex-col">
       <PostHeader post={post} refetch={refetch} />
       <PostComments post={post} refetch={refetch} />
-      <PostStats post={post} refetch={refetch} />
+      <div className="p-3.5">
+        <PostStats post={post} refetch={refetch} />
+      </div>
       <AddComment post={post} refetch={refetch} />
     </div>
   );

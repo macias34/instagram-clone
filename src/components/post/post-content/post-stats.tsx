@@ -46,7 +46,7 @@ const PostStats = ({ post, refetch }: PostProps) => {
         likers={post.likers}
       />
 
-      <div className="flex w-full flex-col gap-3 border-b border-b-slate-200 p-3.5">
+      <div className="flex w-full flex-col gap-3">
         <div className="flex items-center gap-4">
           <span
             className="cursor-pointer transition hover:scale-110"
@@ -83,7 +83,7 @@ const PostStats = ({ post, refetch }: PostProps) => {
         </div>
         <div className="flex flex-col ">
           <button onClick={showDialog} className="w-fit text-sm font-semibold">
-            {post.likes.length} likes
+            {post.likes.length} {post.likes.length !== 1 ? "likes" : "like"}
           </button>
           <span className="text-xs text-slate-500">
             {dayjs(post.createdAt).fromNow()}

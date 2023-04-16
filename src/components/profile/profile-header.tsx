@@ -92,14 +92,14 @@ const ProfileHeader = ({ userData, refetch }: ProfileHeader) => {
           <div className="flex items-center gap-10">
             <span className="text-base">
               <span className="font-semibold">{userData.posts.length}</span>{" "}
-              posts
+              {userData.posts.length !== 1 ? "posts" : "post"}
             </span>
             <span
               onClick={() => showDialog("followers")}
               className="cursor-pointer text-base"
             >
               <span className="font-semibold">{userData.followers.length}</span>{" "}
-              followers
+              {userData.followers.length !== 1 ? "followers" : "follower"}
             </span>
             <span
               onClick={() => showDialog("followings")}
@@ -108,7 +108,7 @@ const ProfileHeader = ({ userData, refetch }: ProfileHeader) => {
               <span className="font-semibold">
                 {userData.followings.length}
               </span>{" "}
-              followings
+              {userData.followers.length !== 1 ? "followings" : "following"}
             </span>
           </div>
 

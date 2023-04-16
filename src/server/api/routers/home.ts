@@ -47,8 +47,75 @@ export const homeRouter = createTRPCRouter({
         const nextItem = posts.pop(); // return the last item from the array
         nextCursor = nextItem?.id;
       }
+
+      const postsWithData = await Promise.all(
+        posts.map(async (post) => {
+          const commentUserIds = post.comments.map((comment) => comment.userId);
+          const commenters = await ctx.prisma.user.findMany({
+            where: {
+              id: {
+                in: commentUserIds,
+              },
+            },
+            select: {
+              id: true,
+              name: true,
+              username: true,
+              image: true,
+              followers: {
+                select: {
+                  followerId: true,
+                },
+              },
+            },
+          });
+
+          if (!commenters)
+            throw new TRPCError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: "Unexpected error while getting commenters.",
+            });
+
+          const comments = post.comments.map((comment) => {
+            return {
+              ...comment,
+              commentAuthor: commenters.find(
+                (commenter) => commenter.id === comment.userId
+              ),
+            };
+          });
+
+          const likerIds = post.likes.map((like) => like.userId);
+
+          const likers = await ctx.prisma.user.findMany({
+            where: {
+              id: {
+                in: likerIds,
+              },
+            },
+            select: {
+              id: true,
+              name: true,
+              username: true,
+              image: true,
+              followers: {
+                select: {
+                  followerId: true,
+                },
+              },
+            },
+          });
+
+          return {
+            ...post,
+            comments,
+            likers,
+          };
+        })
+      );
+
       return {
-        posts,
+        posts: postsWithData,
         nextCursor,
       };
     }),

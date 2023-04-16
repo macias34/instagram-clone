@@ -10,7 +10,7 @@ const ImageSlider = ({
 }) => {
   const [currentPreviewedImage, setCurrentPreviewedImage] = useState(0);
   return (
-    <div className="relative aspect-square h-full w-full">
+    <div className={`relative aspect-square w-full`}>
       {images.map((image, index) => (
         <Image
           key={image.id}
