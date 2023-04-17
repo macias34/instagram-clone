@@ -1,8 +1,6 @@
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -12,6 +10,7 @@ import { useState } from "react";
 import { api } from "~/utils/api";
 import Avatar from "../profile/avatar";
 import Link from "next/link";
+import LoadingSpinner from "../ui/loading-spinner";
 
 const Search = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -72,6 +71,12 @@ const Search = () => {
         />
 
         <div className="scrollbar-hide mt-5 flex h-96 flex-col gap-3 overflow-x-auto">
+          {isLoading && searchValue.trim().length > 0 && (
+            <div className="flex h-full w-full flex-col items-center justify-center gap-5 text-3xl">
+              <LoadingSpinner />
+            </div>
+          )}
+
           {users && users.length > 0 && (
             <>
               {users.map((user) => (
