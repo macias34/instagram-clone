@@ -147,6 +147,15 @@ const PostEditor = ({ post: fetchedPost, setCreatorOpened }: PostEditor) => {
                     Edit post
                   </AlertDialogTitle>
 
+                  {view === "images-upload" && images.length > 0 && (
+                    <button
+                      className="cursor-pointer font-semibold text-blue-500 transition hover:text-blue-800"
+                      onClick={() => setView("post-content")}
+                    >
+                      Content
+                    </button>
+                  )}
+
                   {view === "post-content" && (
                     <button
                       type="button"
