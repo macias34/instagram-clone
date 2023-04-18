@@ -61,7 +61,7 @@ model Comment {
     content       String    @db.MediumText
     post          Post      @relation(fields: [postId], references: [id])
     postId        String    @db.MediumText
-createdAt     DateTime  @default(now())
+    createdAt     DateTime  @default(now())
     updatedAt     DateTime  @updatedAt
     
 }
@@ -69,6 +69,7 @@ createdAt     DateTime  @default(now())
 
 model Image {
     id            String    @id @default(cuid())
+    name          String    @db.MediumText
     src           String    @db.MediumText 
     post          Post      @relation(fields: [postId], references: [id])
     postId        String    @db.MediumText

@@ -175,7 +175,7 @@ export const postRouter = createTRPCRouter({
       z.object({
         images: z
           .object({
-            file: z.string(),
+            src: z.string(),
             name: z.string(),
           })
           .array(),
@@ -211,7 +211,7 @@ export const postRouter = createTRPCRouter({
           images.map(async (image) => {
             const imagePath = post.id + "/" + image.name;
             const imageBuffer = Buffer.from(
-              image.file.replace("data:", "").replace(/^.+,/, ""),
+              image.src.replace("data:", "").replace(/^.+,/, ""),
               "base64"
             );
 
@@ -228,6 +228,7 @@ export const postRouter = createTRPCRouter({
             return {
               src: env.NEXT_PUBLIC_SUPABASE_IMAGES_URL + data?.path,
               postId: post.id,
+              name: image.name,
             };
           })
         );
@@ -262,6 +263,127 @@ export const postRouter = createTRPCRouter({
       });
 
       return postWithImages;
+    }),
+
+  editPost: protectedProcedure
+    .input(
+      z.object({
+        postId: z.string().cuid(),
+        images: z
+          .object({
+            src: z.string(),
+            name: z.string(),
+          })
+          .array(),
+
+        caption: z.string().max(2200),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { images, caption, postId } = input;
+
+      if (images.length > 10) {
+        throw new TRPCError({
+          code: "PAYLOAD_TOO_LARGE",
+          message: "Your post can have up to 10 images",
+        });
+      }
+
+      const post = await ctx.prisma.post.findUnique({
+        where: {
+          id: postId,
+        },
+        include: {
+          images: true,
+        },
+      });
+
+      if (!post)
+        new TRPCError({
+          code: "NOT_FOUND",
+          message: "Post couldn't be found.",
+        });
+
+      const imagesToUpload = images.filter((image) =>
+        image.src.includes("data:")
+      );
+
+      const imagesToRemove = post?.images.filter((postImage) => {
+        const imageSrcs = images.map((image) => image.src);
+
+        if (!imageSrcs.includes(postImage.src)) {
+          return postImage;
+        }
+      });
+
+      if (imagesToRemove && imagesToRemove.length > 0) {
+        await ctx.prisma.image
+          .deleteMany({
+            where: {
+              id: {
+                in: imagesToRemove.map((image) => image.id),
+              },
+            },
+          })
+          .catch(
+            () =>
+              new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "Couldn't delete images from post.",
+              })
+          );
+      }
+
+      const uploadedImages: Omit<Image, "id" | "createdAt">[] =
+        await Promise.all(
+          imagesToUpload.map(async (image) => {
+            const imagePath = postId + "/" + image.name;
+            const imageBuffer = Buffer.from(
+              image.src.replace("data:", "").replace(/^.+,/, ""),
+              "base64"
+            );
+
+            const { data, error } = await supabase.storage
+              .from("images")
+              .upload(imagePath, imageBuffer, { contentType: "image" });
+
+            if (error)
+              throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: error.message,
+              });
+
+            return {
+              src: env.NEXT_PUBLIC_SUPABASE_IMAGES_URL + data?.path,
+              postId,
+              name: image.name,
+            };
+          })
+        );
+
+      const retrievedImages = await Promise.all(
+        uploadedImages.map(
+          async (image) => await ctx.prisma.image.create({ data: image })
+        )
+      );
+
+      const updatedPost = await ctx.prisma.post.update({
+        where: {
+          id: postId,
+        },
+        data: {
+          caption,
+          images: {
+            connect: retrievedImages.map((image) => {
+              return {
+                id: image.id,
+              };
+            }),
+          },
+        },
+      });
+
+      return updatedPost;
     }),
 
   deletePostById: protectedProcedure

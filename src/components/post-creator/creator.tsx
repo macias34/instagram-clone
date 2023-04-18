@@ -19,8 +19,8 @@ import { ArrowLeft } from "lucide-react";
 
 export interface ImageData {
   name: string;
-  file: File;
-  previewURL: string;
+  file?: File;
+  src: string;
 }
 
 const Creator = ({
@@ -77,7 +77,7 @@ const Creator = ({
         images: await Promise.all(
           images.map(async (image) => {
             return {
-              file: await file2Base64(image.file),
+              src: image.file ? await file2Base64(image.file) : image.src,
               name: image.name,
             };
           })

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Avatar from "~/components/profile/avatar";
 import { api } from "~/utils/api";
 import { PostProps } from "../post-content";
-import DeletePost from "./post-header/delete-post";
+import DeletePost from "./post-header/delete-post-dialog";
 import { BsThreeDots } from "react-icons/bs";
 import PostMenu from "./post-header/post-menu";
 

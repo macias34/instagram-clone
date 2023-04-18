@@ -22,7 +22,7 @@ const DiscardPost = ({
 
   const onDiscard = () => {
     if (images && images.length > 0) {
-      images.map((image) => URL.revokeObjectURL(image.previewURL));
+      images.map((image) => URL.revokeObjectURL(image.src));
     }
     setCreatorOpened(false);
   };

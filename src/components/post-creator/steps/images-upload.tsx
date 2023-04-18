@@ -46,13 +46,17 @@ const ImagesUploadStep = ({
       });
 
     images.map(async (image) => {
-      const uniqueImageName = image.name + createKey();
+      const dotIndex = image.name.lastIndexOf(".");
+      const uniqueImageName =
+        image.name.substring(0, dotIndex) +
+        createKey() +
+        image.name.substring(dotIndex);
       const uniqueNamedImage = new File([image], uniqueImageName);
 
-      const previewURL = URL.createObjectURL(uniqueNamedImage);
+      const src = URL.createObjectURL(uniqueNamedImage);
       const imageData: ImageData = {
         name: uniqueNamedImage.name,
-        previewURL,
+        src,
         file: uniqueNamedImage,
       };
 

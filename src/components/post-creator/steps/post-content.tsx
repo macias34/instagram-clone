@@ -6,17 +6,19 @@ import { ImageData } from "../creator";
 import Avatar from "~/components/profile/avatar";
 import EmojiPicker, { EmojiData } from "~/components/ui/emoji-picker";
 import PreviewImages from "./post-content/preview-images";
+import { PostProps } from "~/components/post/post-content";
 
 export interface PostContentStep {
   images: ImageData[];
   setImages: Dispatch<SetStateAction<ImageData[]>>;
+  post?: PostProps["post"];
 }
 
-const PostContentStep = ({ images, setImages }: PostContentStep) => {
+const PostContentStep = ({ images, setImages, post }: PostContentStep) => {
   const { data: sessionData } = useSession();
   if (!sessionData) return <p>Something went wrong with session.</p>;
 
-  const [caption, setCaption] = useState("");
+  const [caption, setCaption] = useState(post?.caption ? post.caption : "");
 
   const handleEmojiSelect = (emojiData: EmojiData) => {
     const { native } = emojiData;

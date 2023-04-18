@@ -12,9 +12,7 @@ const PreviewImages = ({ images, setImages }: PostContentStep) => {
   const removePhoto = () => {
     const imageToRemove = images[currentPreviewedImage];
     setImages((prevState) =>
-      prevState.filter(
-        (image) => image.previewURL !== imageToRemove?.previewURL
-      )
+      prevState.filter((image) => image.src !== imageToRemove?.src)
     );
     setFieldValue("images", images);
 
@@ -27,8 +25,8 @@ const PreviewImages = ({ images, setImages }: PostContentStep) => {
     <div className="relative w-3/5">
       {images.map((image, index) => (
         <Image
-          key={image.previewURL}
-          src={image.previewURL}
+          key={image.src}
+          src={image.src}
           priority
           alt="Preview image"
           style={{ objectFit: "cover" }}

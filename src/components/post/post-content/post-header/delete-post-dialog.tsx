@@ -19,7 +19,7 @@ interface DeletePost {
   post: PostProps["post"];
 }
 
-const DeletePost = ({ post }: DeletePost) => {
+const DeletePostDialog = ({ post }: DeletePost) => {
   const { mutate: deletePostInDb } = api.post.deletePostById.useMutation();
   const { toast } = useToast();
   const router = useRouter();
@@ -70,4 +70,4 @@ const DeletePost = ({ post }: DeletePost) => {
   );
 };
 
-export default DeletePost;
+export default DeletePostDialog;

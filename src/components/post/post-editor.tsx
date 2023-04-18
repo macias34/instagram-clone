@@ -17,26 +17,30 @@ import { useRouter } from "next/router";
 import { useToast } from "~/hooks/use-toast";
 import { ArrowLeft } from "lucide-react";
 import ImagesUploadStep from "../post-creator/steps/images-upload";
+import { PostProps } from "./post-content";
 
 export interface ImageData {
   name: string;
-  file: File;
-  previewURL: string;
+  file?: File;
+  src: string;
 }
 
-const PostEditor = ({
-  setCreatorOpened,
-}: {
+interface PostEditor {
   setCreatorOpened: Dispatch<SetStateAction<boolean>>;
-}) => {
+  post: PostProps["post"];
+}
+
+const PostEditor = ({ post: fetchedPost, setCreatorOpened }: PostEditor) => {
+  const router = useRouter();
+  const { mutate: upload } = api.post.editPost.useMutation();
   const { toast } = useToast();
   const [view, setView] = useState<"images-upload" | "post-content">(
-    "images-upload"
+    "post-content"
   );
-  const [images, setImages] = useState<ImageData[]>([]);
+  const [images, setImages] = useState<ImageData[]>(
+    fetchedPost.images.map((image) => image)
+  );
   const [isShareButtonDisabled, setIsShareButtonDisabled] = useState(false);
-  const router = useRouter();
-  const { mutate: upload } = api.post.createPost.useMutation();
 
   useEffect(() => {
     if (images && images.length > 0) setView("post-content");
@@ -64,8 +68,8 @@ const PostEditor = ({
   });
 
   const initialValues = {
-    images: [],
-    caption: "",
+    images,
+    caption: fetchedPost?.caption ? fetchedPost.caption : "",
   };
 
   const onCreatePost = async (post: {
@@ -75,10 +79,11 @@ const PostEditor = ({
     setIsShareButtonDisabled(true);
     upload(
       {
+        postId: fetchedPost.id,
         images: await Promise.all(
           images.map(async (image) => {
             return {
-              file: await file2Base64(image.file),
+              src: image.file ? await file2Base64(image.file) : image.src,
               name: image.name,
             };
           })
@@ -86,9 +91,9 @@ const PostEditor = ({
         caption: post.caption,
       },
       {
-        onSuccess(post) {
+        onSuccess() {
           setCreatorOpened(false);
-          router.push("/p/" + post.id);
+          router.push("/p/" + fetchedPost.id);
         },
         onError(error) {
           setIsShareButtonDisabled(false);
@@ -114,57 +119,63 @@ const PostEditor = ({
         validationSchema={toFormikValidationSchema(createPostSchema)}
         onSubmit={onCreatePost}
       >
-        {({ submitForm }) => (
-          <Form>
-            <AlertDialogHeader className="relative flex w-full items-center">
-              <div
-                className={`flex w-full flex-row items-center justify-between px-3
+        {({ submitForm }) => {
+          return (
+            <Form>
+              <AlertDialogHeader className="relative flex w-full items-center">
+                <div
+                  className={`flex w-full flex-row items-center justify-between px-3
              `}
-              >
-                {view === "images-upload" ? (
-                  <DiscardPost
-                    images={images}
-                    setCreatorOpened={setCreatorOpened}
-                  />
-                ) : (
-                  <button
-                    onClick={() => setView("images-upload")}
-                    type="button"
-                    title="Image upload"
-                    className="cursor-pointer"
-                  >
-                    <ArrowLeft />
-                  </button>
+                >
+                  {view === "images-upload" ? (
+                    <DiscardPost
+                      images={images}
+                      setCreatorOpened={setCreatorOpened}
+                    />
+                  ) : (
+                    <button
+                      onClick={() => setView("images-upload")}
+                      type="button"
+                      title="Image upload"
+                      className="cursor-pointer"
+                    >
+                      <ArrowLeft />
+                    </button>
+                  )}
+
+                  <AlertDialogTitle className="absolute left-1/2 top-0 -translate-x-1/2 text-base">
+                    Edit post
+                  </AlertDialogTitle>
+
+                  {view === "post-content" && (
+                    <button
+                      type="button"
+                      onClick={submitForm}
+                      disabled={isShareButtonDisabled}
+                      className="cursor-pointer font-semibold text-blue-500 transition hover:text-blue-800"
+                    >
+                      Share
+                    </button>
+                  )}
+                </div>
+                <Separator className="" />
+              </AlertDialogHeader>
+
+              <div className="flex h-[530px] flex-col items-center justify-center gap-7 rounded-md">
+                {view === "images-upload" && (
+                  <ImagesUploadStep setImages={setImages} />
                 )}
-
-                <AlertDialogTitle className="absolute left-1/2 top-0 -translate-x-1/2 text-base">
-                  Create new post
-                </AlertDialogTitle>
-
                 {view === "post-content" && (
-                  <button
-                    type="button"
-                    onClick={submitForm}
-                    disabled={isShareButtonDisabled}
-                    className="cursor-pointer font-semibold text-blue-500 transition hover:text-blue-800"
-                  >
-                    Share
-                  </button>
+                  <PostContentStep
+                    setImages={setImages}
+                    post={fetchedPost}
+                    images={images}
+                  />
                 )}
               </div>
-              <Separator className="" />
-            </AlertDialogHeader>
-
-            <div className="flex h-[530px] flex-col items-center justify-center gap-7 rounded-md">
-              {view === "images-upload" && (
-                <ImagesUploadStep setImages={setImages} />
-              )}
-              {view === "post-content" && (
-                <PostContentStep setImages={setImages} images={images} />
-              )}
-            </div>
-          </Form>
-        )}
+            </Form>
+          );
+        }}
       </Formik>
     </AlertDialogContent>
   );
