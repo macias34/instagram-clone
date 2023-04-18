@@ -3,6 +3,7 @@ import { ChangeEvent, Dispatch, SetStateAction, useEffect } from "react";
 import { useToast } from "~/hooks/use-toast";
 import { useFormikContext } from "formik";
 import { ImageData } from "../creator";
+import { createKey } from "next/dist/shared/lib/router/router";
 
 const ImagesUploadStep = ({
   setImages,
@@ -45,11 +46,14 @@ const ImagesUploadStep = ({
       });
 
     images.map(async (image) => {
-      const previewURL = URL.createObjectURL(image);
+      const uniqueImageName = image.name + createKey();
+      const uniqueNamedImage = new File([image], uniqueImageName);
+
+      const previewURL = URL.createObjectURL(uniqueNamedImage);
       const imageData: ImageData = {
-        name: image.name,
+        name: uniqueNamedImage.name,
         previewURL,
-        file: image,
+        file: uniqueNamedImage,
       };
 
       setImages((prevState) =>

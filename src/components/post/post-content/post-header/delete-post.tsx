@@ -13,8 +13,13 @@ import { api } from "~/utils/api";
 import { PostProps } from "../../post-content";
 import { useToast } from "~/hooks/use-toast";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
-const DeletePost = ({ post }: Omit<PostProps, "refetch">) => {
+interface DeletePost {
+  post: PostProps["post"];
+}
+
+const DeletePost = ({ post }: DeletePost) => {
   const { mutate: deletePostInDb } = api.post.deletePostById.useMutation();
   const { toast } = useToast();
   const router = useRouter();
@@ -37,8 +42,8 @@ const DeletePost = ({ post }: Omit<PostProps, "refetch">) => {
 
   return (
     <AlertDialog>
-      <AlertDialogTrigger>
-        <button className="text-red-500">Delete post</button>
+      <AlertDialogTrigger className="text-red-500 hover:text-red-600">
+        Delete post
       </AlertDialogTrigger>
       <AlertDialogContent className="max-w-sm p-0 pt-7">
         <AlertDialogHeader className="items-center justify-center py-2">

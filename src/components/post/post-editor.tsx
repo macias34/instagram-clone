@@ -1,13 +1,13 @@
 import { Separator } from "../ui/seperator";
-import ImagesUploadStep from "./steps/images-upload";
+ImagesUploadStep;
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
-import PostContentStep from "./steps/post-content";
+import PostContentStep from "../post-creator/steps/post-content";
+import DiscardPost from "../post-creator/discard-post";
 import {
   AlertDialogContent,
   AlertDialogHeader,
   AlertDialogTitle,
 } from "../ui/alert-dialog";
-import DiscardPost from "./discard-post";
 import { Form, Formik } from "formik";
 import { z } from "zod";
 import { toFormikValidationSchema } from "zod-formik-adapter";
@@ -16,6 +16,7 @@ import { file2Base64 } from "~/utils/files";
 import { useRouter } from "next/router";
 import { useToast } from "~/hooks/use-toast";
 import { ArrowLeft } from "lucide-react";
+import ImagesUploadStep from "../post-creator/steps/images-upload";
 
 export interface ImageData {
   name: string;
@@ -23,7 +24,7 @@ export interface ImageData {
   previewURL: string;
 }
 
-const Creator = ({
+const PostEditor = ({
   setCreatorOpened,
 }: {
   setCreatorOpened: Dispatch<SetStateAction<boolean>>;
@@ -169,4 +170,4 @@ const Creator = ({
   );
 };
 
-export default Creator;
+export default PostEditor;

@@ -1,54 +1,18 @@
-import { useState, ChangeEvent } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import Image from "next/image";
+import { useState, ChangeEvent, Dispatch, SetStateAction } from "react";
 import { useSession } from "next-auth/react";
 import { Textarea } from "~/components/ui/textarea";
 import { Field } from "formik";
 import { ImageData } from "../creator";
 import Avatar from "~/components/profile/avatar";
 import EmojiPicker, { EmojiData } from "~/components/ui/emoji-picker";
+import PreviewImages from "./post-content/preview-images";
 
-const PreviewImages = ({ images }: { images: ImageData[] }) => {
-  const [currentPreviewedImage, setCurrentPreviewedImage] = useState(0);
+export interface PostContentStep {
+  images: ImageData[];
+  setImages: Dispatch<SetStateAction<ImageData[]>>;
+}
 
-  return (
-    <div className="relative w-3/5">
-      {images.map((image, index) => (
-        <Image
-          key={image.previewURL}
-          src={image.previewURL}
-          priority
-          alt="Preview image"
-          style={{ objectFit: "cover" }}
-          className={`${
-            currentPreviewedImage !== index && "invisible"
-          } rounded-bl-lg brightness-110`}
-          fill
-        />
-      ))}
-
-      {currentPreviewedImage < images.length - 1 && (
-        <div
-          onClick={() => setCurrentPreviewedImage((prevState) => prevState + 1)}
-          className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-[rgba(0,0,0,0.65)] transition hover:bg-[rgba(0,0,0,0.5)]"
-        >
-          <ChevronRight className="text-white" />
-        </div>
-      )}
-
-      {currentPreviewedImage !== 0 && (
-        <div
-          onClick={() => setCurrentPreviewedImage((prevState) => prevState - 1)}
-          className="absolute left-2 top-1/2 flex h-8 w-8 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-[rgba(0,0,0,0.65)] transition hover:bg-[rgba(0,0,0,0.5)]"
-        >
-          <ChevronLeft className="text-white" />
-        </div>
-      )}
-    </div>
-  );
-};
-
-const PostContentStep = ({ images }: { images: ImageData[] }) => {
+const PostContentStep = ({ images, setImages }: PostContentStep) => {
   const { data: sessionData } = useSession();
   if (!sessionData) return <p>Something went wrong with session.</p>;
 
@@ -63,7 +27,7 @@ const PostContentStep = ({ images }: { images: ImageData[] }) => {
   if (images && images.length > 0)
     return (
       <div className="flex h-full w-full">
-        <PreviewImages images={images} />
+        <PreviewImages setImages={setImages} images={images} />
         <div className="flex h-full grow flex-col gap-4 pt-4">
           <div className="flex h-fit items-center gap-3 pl-4">
             <Avatar user={sessionData.user} />

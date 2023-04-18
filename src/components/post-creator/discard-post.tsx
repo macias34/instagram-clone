@@ -5,20 +5,27 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-  AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogDescription,
   AlertDialogFooter,
 } from "../ui/alert-dialog";
-
+import { ImageData } from "./creator";
 import { Dispatch, SetStateAction, useState } from "react";
 
 const DiscardPost = ({
   setCreatorOpened,
+  images,
 }: {
   setCreatorOpened: Dispatch<SetStateAction<boolean>>;
+  images: ImageData[];
 }) => {
   const [discardPostOpened, setDiscardPostOpened] = useState(false);
+
+  const onDiscard = () => {
+    if (images && images.length > 0) {
+      images.map((image) => URL.revokeObjectURL(image.previewURL));
+    }
+    setCreatorOpened(false);
+  };
 
   return (
     <AlertDialog open={discardPostOpened}>
@@ -38,7 +45,7 @@ const DiscardPost = ({
         </AlertDialogHeader>
         <AlertDialogFooter className="flex w-full !flex-col">
           <button
-            onClick={() => setCreatorOpened(false)}
+            onClick={onDiscard}
             className="border-t border-t-slate-300 bg-white py-4 text-sm font-bold text-red-500 hover:bg-white"
           >
             Discard

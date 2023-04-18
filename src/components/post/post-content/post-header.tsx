@@ -5,6 +5,8 @@ import Avatar from "~/components/profile/avatar";
 import { api } from "~/utils/api";
 import { PostProps } from "../post-content";
 import DeletePost from "./post-header/delete-post";
+import { BsThreeDots } from "react-icons/bs";
+import PostMenu from "./post-header/post-menu";
 
 const PostHeader = ({ post }: PostProps) => {
   const { data: sessionData } = useSession();
@@ -61,7 +63,7 @@ const PostHeader = ({ post }: PostProps) => {
         )}
       </div>
 
-      <DeletePost post={post} />
+      {sessionData?.user.id === post.authorId && <PostMenu post={post} />}
     </div>
   );
 };

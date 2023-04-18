@@ -186,6 +186,13 @@ export const postRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       const { images, caption } = input;
 
+      if (images.length > 10) {
+        throw new TRPCError({
+          code: "PAYLOAD_TOO_LARGE",
+          message: "Your post can have up to 10 images",
+        });
+      }
+
       const post = await ctx.prisma.post.create({
         data: {
           caption,
