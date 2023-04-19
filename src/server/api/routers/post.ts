@@ -24,6 +24,7 @@ export const postRouter = createTRPCRouter({
           images: true,
           likes: true,
           comments: true,
+          author: true,
         },
       });
 
