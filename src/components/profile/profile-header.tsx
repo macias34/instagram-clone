@@ -68,11 +68,7 @@ const ProfileHeader = ({ userData, refetch }: ProfileHeader) => {
           <div className="flex items-center gap-10">
             <span className="text-lg font-normal">{userData.username}</span>
             <div className="flex gap-2">
-              {sessionData?.user.name === userData.username ? (
-                <Button variant="instagram" size="instagram">
-                  Edit profile
-                </Button>
-              ) : (
+              {sessionData?.user.name !== userData.username && (
                 <>
                   <Button
                     onClick={toggleFollow}

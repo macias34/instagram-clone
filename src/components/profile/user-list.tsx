@@ -8,8 +8,6 @@ interface UserList {
 }
 
 const UserList = ({ users, emptyStateMessage, refetch }: UserList) => {
-  console.log(users);
-
   return (
     <div className="flex h-[350px] w-full flex-col gap-5 overflow-x-auto">
       {users && users.length > 0 ? (

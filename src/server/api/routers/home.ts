@@ -25,6 +25,7 @@ export const homeRouter = createTRPCRouter({
       const followingIds = retrievedFollowings.map(
         (following) => following.followedId
       );
+      console.log("ids", followingIds);
 
       const posts = await ctx.prisma.post.findMany({
         where: {
@@ -54,6 +55,7 @@ export const homeRouter = createTRPCRouter({
           comments: true,
         },
       });
+      console.log(posts);
 
       let nextCursor: typeof cursor | undefined = undefined;
 
@@ -134,7 +136,7 @@ export const homeRouter = createTRPCRouter({
       };
     }),
 
-  getBatchFollowersPosts: protectedProcedure
+  getBatchFollowersPosts: publicProcedure
     .input(
       z.object({
         limit: z.number(),
@@ -146,7 +148,7 @@ export const homeRouter = createTRPCRouter({
 
       const retrievedFollowings = await ctx.prisma.follower.findMany({
         where: {
-          followerId: ctx.session.user.id,
+          followerId: ctx.session?.user.id,
         },
       });
       const followingIds = retrievedFollowings.map(

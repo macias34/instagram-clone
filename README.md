@@ -1,28 +1,74 @@
-# Create T3 App
+# 📷 Instagram Clone
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+# 🌅 Preview links :
+- [🏠 Home page](https://instagram-clone-propiesek.vercel.app/)
+- [👤 Profile page](https://instagram-clone-propiesek.vercel.app/macias34)
+- [📝 Post page](https://instagram-clone-propiesek.vercel.app/p/clgs50fyi0017ick86ntbsv3q)
 
-## What's next? How do I make an app with this?
+# 📚 Table of Contents
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+- [📝 About the app](#📝-about-the-app)
+  - [🚀 Features](#🚀-features)
+- [💡 Motivation](#💡-motivation)
+- [🛠️ Technology stack](#🛠️-technology-stack)
+- [📷 Screenshots](#📷-screenshots)
+  - [🔒 Auth page](#🔒-auth-page)
+  - [🏠 Home page](#🏠-home-page)
+  - [👤 Profile page](#👤-profile-page)
+  - [📝 Post page](#📝-post-page)
+  - [➕ Post creation](#➕-post-creation)
+  - [🔎 Search for a user](#🔎-search-for-a-user)
+- [📞 Contact](#📞-contact)
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+# 📝 About the app
+A clone of the Instagram.
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+## 🚀 Features
+- creating, managing and displaying posts
+- follow other people
+- like and comment posts
+- show followings' posts on home page
+- search for a user
 
-## Learn More
+# 💡 Motivation
+My motivation was to improve my coding skills and learn T3 Stack, while creating a fun project. 
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+# 🛠️ Technology stack
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+- [T3 Stack](https://create.t3.gg/) - For dynamic type safety on front-end and backend
+  - [Next 13 (React)](https://nextjs.org/) - For front-end
+  - [Tailwind](https://tailwindcss.com/) - For styling
+  - [Typescript](https://www.typescriptlang.org/) - For type safety
+  - [TRPC](https://trpc.io/) - For back-end
+  - [NextAuth](https://next-auth.js.org/) - For auth
+  - [Prisma](https://www.prisma.io/) - As a ORM for database
+  - [React Query](https://tanstack.com/query/v3/) - For fetching and caching data
+  - [zod](https://zod.dev/) - For type safe inputs
+- [shadcn/ui](https://ui.shadcn.com/) - As a UI library
+- [PlanetScale](https://planetscale.com/) - As the database (mysql)
+- [supabase](https://supabase.com/) - As the storage
+- [Formik](https://formik.org/) - For managing forms
+- [Vercel](https://vercel.com/) - For deployment
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+# 📷 Screenshots
 
-## How do I deploy this?
+## 🔒 Auth page
+![Auth page](documentation_imgs/auth.png)
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+## 🏠 Home page
+![Home page](documentation_imgs/home.png)
+
+## 👤 Profile page
+![Profile page](documentation_imgs/profile.png)
+
+## 📝 Post page
+![Post page](documentation_imgs/post.png)
+
+## ➕ Post creation
+![Post creation](documentation_imgs/post-creation.png)
+
+## 🔎 Search for a user
+![Search for a user](documentation_imgs/search.png)
+
+# 📞 Contact
+Feel free to contact me, message me on Discord @macias#9277 😄🙏.

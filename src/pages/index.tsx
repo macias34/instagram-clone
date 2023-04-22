@@ -6,6 +6,8 @@ import RootLayout from "~/components/layout";
 import { Separator } from "~/components/ui/seperator";
 import { api } from "~/utils/api";
 
+const NotAuthedHome = () => {};
+
 const Home: NextPage = () => {
   const {
     data: followingPosts,
@@ -24,7 +26,7 @@ const Home: NextPage = () => {
   const {
     data: nonFollowingPosts,
     fetchNextPage,
-    refetch : refetchNonFollowings,
+    refetch: refetchNonFollowings,
     hasNextPage,
   } = api.home.getBatchPosts.useInfiniteQuery(
     {
@@ -35,10 +37,10 @@ const Home: NextPage = () => {
     }
   );
 
-  const refetch = ()=> {
+  const refetch = () => {
     refetchFollowings();
     refetchNonFollowings();
-  }
+  };
 
   const pages = [followingPosts?.pages, nonFollowingPosts?.pages];
 
