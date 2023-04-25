@@ -16,7 +16,7 @@ interface Post {
 
 const Post = ({ post, refetch }: Post) => {
   return (
-    <div className="w-[34rem]">
+    <div className="w-[90vw] xl:w-[34rem]">
       <div className="flex items-center gap-3 px-2 pb-3  text-sm">
         <Link href={`/${post.author.username}`}>
           <Avatar user={post.author} size={35} />

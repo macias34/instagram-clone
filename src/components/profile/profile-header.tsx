@@ -62,7 +62,7 @@ const ProfileHeader = ({ userData, refetch }: ProfileHeader) => {
         followers={userData.followers}
         followings={userData.followings}
       />
-      <div className="flex gap-24 pl-20 pr-52">
+      <div className="flex flex-col items-center gap-5 px-5 xl:flex-row xl:items-start xl:gap-24 xl:pl-20 xl:pr-52">
         <Avatar user={userData} size={150} />
         <div className="flex grow flex-col gap-5">
           <div className="flex items-center gap-10">

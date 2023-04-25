@@ -20,7 +20,7 @@ const ProfilePage: NextPage<{ username: string }> = ({ username }) => {
 
   return (
     <RootLayout>
-      <div className="flex h-full flex-col gap-14 px-40 py-10">
+      <div className="flex h-full flex-col gap-10 py-10 xl:gap-14 xl:px-40">
         {userData && <ProfileHeader userData={userData} refetch={refetch} />}
         <Separator />
         {posts && <ProfileFeed posts={posts} />}

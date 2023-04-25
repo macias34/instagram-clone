@@ -17,8 +17,8 @@ const PostPage: NextPage<{ postId: string }> = ({ postId }) => {
 
   return (
     <RootLayout>
-      <div className="flex h-full w-full flex-col items-center justify-center gap-14 px-40 py-10">
-        <div className="flex w-full border border-slate-300">
+      <div className="flex h-full w-full flex-col items-center justify-center gap-14 py-10 xl:px-40">
+        <div className="flex w-full flex-col border border-slate-300 xl:flex-row">
           <ImageSlider images={post.images} />
           <div className="w-2/3">
             <PostContent post={post} refetch={refetch} />
