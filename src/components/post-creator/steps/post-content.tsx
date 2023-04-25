@@ -28,7 +28,7 @@ const PostContentStep = ({ images, setImages, post }: PostContentStep) => {
 
   if (images && images.length > 0)
     return (
-      <div className="flex h-full w-full">
+      <div className="flex h-full w-full flex-col xl:flex-row">
         <PreviewImages setImages={setImages} images={images} />
         <div className="flex h-full grow flex-col gap-4 pt-4">
           <div className="flex h-fit items-center gap-3 pl-4">
@@ -54,7 +54,7 @@ const PostContentStep = ({ images, setImages, post }: PostContentStep) => {
 
             <div className="flex justify-between py-4 pr-4 text-xs text-slate-400">
               <EmojiPicker
-                className="-translate-x-[110%] translate-y-[-75%]"
+                className=" -translate-x-[110%] translate-y-[-75%]"
                 handleEmojiSelect={handleEmojiSelect}
               />
 

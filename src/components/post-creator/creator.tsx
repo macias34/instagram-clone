@@ -154,7 +154,7 @@ const Creator = ({
               <Separator className="" />
             </AlertDialogHeader>
 
-            <div className="flex h-[530px] flex-col items-center justify-center gap-7 rounded-md">
+            <div className="flex min-h-[500px] flex-col items-center justify-center gap-7 rounded-md xl:h-[530px]">
               {view === "images-upload" && (
                 <ImagesUploadStep setImages={setImages} />
               )}

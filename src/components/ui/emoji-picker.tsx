@@ -32,7 +32,7 @@ const EmojiPicker = ({
         <button
           onClick={() => setEmojiPickerOpened((prevState) => !prevState)}
           type="button"
-          className="relative"
+          className="relative hidden xl:block"
         >
           <svg
             aria-label="Emoji"

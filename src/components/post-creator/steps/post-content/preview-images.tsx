@@ -22,7 +22,7 @@ const PreviewImages = ({ images, setImages }: PostContentStep) => {
   };
 
   return (
-    <div className="relative w-3/5">
+    <div className="relative h-[500px] w-full xl:h-auto xl:w-3/5">
       {images.map((image, index) => (
         <Image
           key={image.src}
@@ -32,7 +32,7 @@ const PreviewImages = ({ images, setImages }: PostContentStep) => {
           style={{ objectFit: "cover" }}
           className={`${
             currentPreviewedImage !== index && "invisible"
-          } rounded-bl-lg brightness-110`}
+          } brightness-110 xl:rounded-bl-lg`}
           fill
         />
       ))}
