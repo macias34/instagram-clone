@@ -63,14 +63,14 @@ const Aside: React.FC<{ sessionData: Session | null }> = ({ sessionData }) => {
                 Profile
               </Link>
             )}
+            <div
+              title={sessionData ? "Log out" : "Log in"}
+              onClick={() => (sessionData ? signOut() : signIn())}
+              className="absolute bottom-0 flex w-full cursor-pointer items-center gap-4 rounded-full py-2 pl-2 text-base hover:bg-slate-50"
+            >
+              <LogOut /> <span>{sessionData ? "Log out" : "Log in"}</span>
+            </div>
           </nav>
-        </div>
-        <div
-          title={sessionData ? "Log out" : "Log in"}
-          onClick={() => (sessionData ? signOut() : signIn())}
-          className="flex w-full cursor-pointer items-center gap-4 rounded-full py-2 pl-2 text-base hover:bg-slate-50"
-        >
-          <LogOut /> <span>{sessionData ? "Log out" : "Log in"}</span>
         </div>
       </div>
     </div>
