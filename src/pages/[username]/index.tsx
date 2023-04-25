@@ -5,18 +5,42 @@ import { generateSSGHelper } from "~/server/helpers/ssgHelper";
 import { api } from "~/utils/api";
 import ProfileHeader from "~/components/profile/profile-header";
 import ProfileFeed from "~/components/profile/profile-feed";
+import LoadingSpinner from "~/components/ui/loading-spinner";
 
 const ProfilePage: NextPage<{ username: string }> = ({ username }) => {
-  const { data: posts, error: postsError } =
-    api.post.getPostsByUsername.useQuery(username, { refetchOnMount: true });
+  const {
+    data: posts,
+    error: postsError,
+    isLoading: arePostsLoading,
+  } = api.post.getPostsByUsername.useQuery(username, { refetchOnMount: true });
 
   const {
     data: userData,
     error: userDataError,
     refetch,
+    isLoading: isUserDataLoading,
   } = api.user.getUserPublicDataByUsername.useQuery(username, {
     refetchOnMount: true,
   });
+
+  if (isUserDataLoading || arePostsLoading)
+    return (
+      <RootLayout>
+        <div className="flex h-full w-full items-center justify-center">
+          <LoadingSpinner />
+        </div>
+      </RootLayout>
+    );
+
+  if (postsError || userDataError) {
+    return (
+      <RootLayout>
+        <div className="flex h-full w-full items-center justify-center">
+          <h1>No user with this username.</h1>
+        </div>
+      </RootLayout>
+    );
+  }
 
   return (
     <RootLayout>

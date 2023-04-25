@@ -2,6 +2,7 @@ import { GetStaticProps, NextPage } from "next";
 import RootLayout from "~/components/layout";
 import ImageSlider from "~/components/post/image-slider";
 import PostContent from "~/components/post/post-content";
+import LoadingSpinner from "~/components/ui/loading-spinner";
 import { generateSSGHelper } from "~/server/helpers/ssgHelper";
 import { api } from "~/utils/api";
 
@@ -10,10 +11,26 @@ const PostPage: NextPage<{ postId: string }> = ({ postId }) => {
     data: post,
     error: postError,
     refetch,
+    isLoading,
   } = api.post.getPostById.useQuery(postId);
 
   if (!post || !post.images)
-    return <p>Something went wrong while getting this post.</p>;
+    return (
+      <RootLayout>
+        <div className="flex h-full w-full items-center justify-center">
+          <h1>Post not found.</h1>
+        </div>
+      </RootLayout>
+    );
+
+  if (isLoading)
+    return (
+      <RootLayout>
+        <div className="flex h-full w-full items-center justify-center">
+          <LoadingSpinner />
+        </div>
+      </RootLayout>
+    );
 
   return (
     <RootLayout>
