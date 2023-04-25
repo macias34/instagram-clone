@@ -3,10 +3,9 @@ import { Fragment, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Post from "~/components/home/post";
 import RootLayout from "~/components/layout";
+import LoadingSpinner from "~/components/ui/loading-spinner";
 import { Separator } from "~/components/ui/seperator";
 import { api } from "~/utils/api";
-
-const NotAuthedHome = () => {};
 
 const Home: NextPage = () => {
   const {
@@ -14,6 +13,7 @@ const Home: NextPage = () => {
     fetchNextPage: fetchNextFollowingsPage,
     refetch: refetchFollowings,
     hasNextPage: hasNextFollowingsPage,
+    isLoading: isFollowingsPostsLoading,
   } = api.home.getBatchFollowersPosts.useInfiniteQuery(
     {
       limit: 2,
@@ -28,6 +28,7 @@ const Home: NextPage = () => {
     fetchNextPage,
     refetch: refetchNonFollowings,
     hasNextPage,
+    isLoading: isNonFollowingsPostsLoading,
   } = api.home.getBatchPosts.useInfiniteQuery(
     {
       limit: 2,
@@ -43,6 +44,15 @@ const Home: NextPage = () => {
   };
 
   const pages = [followingPosts?.pages, nonFollowingPosts?.pages];
+
+  if (isFollowingsPostsLoading || isNonFollowingsPostsLoading)
+    return (
+      <RootLayout>
+        <div className="flex h-screen w-screen items-center justify-center">
+          <LoadingSpinner />
+        </div>
+      </RootLayout>
+    );
 
   return (
     <RootLayout>
