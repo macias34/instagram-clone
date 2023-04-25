@@ -11,7 +11,7 @@ const PostCreatorDialog = () => {
       <AlertDialogTrigger onClick={() => setCreatorOpened(true)} asChild>
         <div
           title="Open post creation"
-          className="flex cursor-pointer items-center gap-4 rounded-full py-2 pl-2 pr-28 text-base hover:bg-slate-50"
+          className="flex w-full cursor-pointer items-center gap-4 rounded-full py-2 pl-2 text-base hover:bg-slate-50"
         >
           <svg
             aria-label="Nowy post"
