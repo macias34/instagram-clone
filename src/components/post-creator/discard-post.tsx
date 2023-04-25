@@ -34,7 +34,7 @@ const DiscardPost = ({
           <ArrowLeft />
         </div>
       </AlertDialogTrigger>
-      <AlertDialogContent className="max-w-sm p-0 pt-7">
+      <AlertDialogContent className="max-w-sm p-0 pt-7 max-xl:top-1/2 max-xl:-translate-y-1/2 max-xl:rounded-lg">
         <AlertDialogHeader className="items-center justify-center py-2">
           <AlertDialogTitle className="text-lg font-normal">
             Discard post?

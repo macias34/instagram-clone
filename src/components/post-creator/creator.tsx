@@ -104,7 +104,7 @@ const Creator = ({
 
   return (
     <AlertDialogContent
-      className={`gap-0 px-0 py-0 pt-4 transition-all duration-300 ${
+      className={`gap-0 px-0 py-0 pt-4 transition-all duration-300 max-xl:top-1/2 max-xl:max-w-sm max-xl:-translate-y-1/2 max-xl:rounded-lg ${
         view === "images-upload" ? "max-w-lg" : "max-w-4xl"
       }`}
     >

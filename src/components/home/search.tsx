@@ -58,7 +58,7 @@ const Search = () => {
           <span className="hidden xl:inline">Search</span>
         </button>
       </DialogTrigger>
-      <DialogContent className="flex min-h-[80%] w-[400px] flex-col">
+      <DialogContent className="flex w-[400px] flex-col max-xl:top-1/2 max-xl:max-w-sm max-xl:-translate-y-1/2 max-xl:rounded-lg xl:min-h-[80%]">
         <DialogHeader>
           <DialogTitle className="mb-3 text-2xl">Search for a user</DialogTitle>
         </DialogHeader>
