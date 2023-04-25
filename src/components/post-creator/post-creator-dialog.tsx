@@ -9,9 +9,9 @@ const PostCreatorDialog = () => {
   return (
     <AlertDialog open={creatorOpened}>
       <AlertDialogTrigger onClick={() => setCreatorOpened(true)} asChild>
-        <div
+        <button
           title="Open post creation"
-          className="flex w-full cursor-pointer items-center gap-4 rounded-full py-2 pl-2 text-base hover:bg-slate-50"
+          className="flex items-center gap-4 rounded-full p-2 text-base hover:bg-slate-50 xl:w-full xl:pl-2"
         >
           <svg
             aria-label="Nowy post"
@@ -53,8 +53,8 @@ const PostCreatorDialog = () => {
               y2="17.455"
             ></line>
           </svg>
-          Create
-        </div>
+          <span className="hidden xl:inline">Create</span>
+        </button>
       </AlertDialogTrigger>
       {creatorOpened && <Creator setCreatorOpened={setCreatorOpened} />}
     </AlertDialog>

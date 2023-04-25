@@ -24,7 +24,7 @@ const Search = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button className="flex w-full items-center gap-4 rounded-full py-2 pl-2 text-base hover:bg-slate-50">
+        <button className="flex items-center gap-4 rounded-full p-2 text-base hover:bg-slate-50 xl:w-full xl:pl-2">
           <svg
             aria-label="Search"
             color="rgb(0, 0, 0)"
@@ -54,7 +54,8 @@ const Search = () => {
               y2="22"
             ></line>
           </svg>
-          Search
+
+          <span className="hidden xl:inline">Search</span>
         </button>
       </DialogTrigger>
       <DialogContent className="flex min-h-[80%] w-[400px] flex-col">
