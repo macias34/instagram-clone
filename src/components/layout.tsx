@@ -12,7 +12,7 @@ import { LogOut } from "lucide-react";
 
 const Navbar: React.FC<{ sessionData: Session | null }> = ({ sessionData }) => {
   return (
-    <div className="sticky top-0 z-50 flex w-full flex-col justify-between border-b border-slate-300 bg-white px-4 py-3 xl:h-screen xl:w-1/6 xl:border-b-0 xl:border-r xl:py-7 ">
+    <div className="sticky top-0 z-50 flex w-full flex-col justify-between border-b border-slate-300 bg-white px-4 py-3  xl:h-screen xl:w-1/6 xl:border-b-0 xl:border-r xl:py-7 ">
       <div className="relative z-50 flex h-full w-full flex-col justify-between ">
         <div className="flex flex-col gap-5">
           <div className="hidden xl:block">
@@ -102,7 +102,7 @@ const RootLayout: FC<PropsWithChildren> = ({ children }) => {
       </Head>
       <main className="flex flex-col xl:flex-row">
         <Navbar sessionData={sessionData} />
-        <div className="w-5/6">{children}</div>
+        <div className="grow">{children}</div>
       </main>
     </>
   );
