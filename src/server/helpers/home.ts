@@ -86,3 +86,61 @@ export const getPostsWithData = async (posts: SafePost[], ctx: Context) => {
 
   return postsWithData;
 };
+
+export const getFollowingIds = async (ctx: Context) => {
+  const retrievedFollowings = await ctx.prisma.follower.findMany({
+    where: {
+      followerId: ctx.session?.user.id,
+    },
+  });
+  const followingIds = retrievedFollowings.map(
+    (following) => following.followedId
+  );
+
+  return followingIds;
+};
+
+interface GetPostsByFollowingIds {
+  followingIds: string[];
+  limit: number;
+  cursor: any;
+  ctx: Context;
+  mode: "in" | "notIn";
+}
+
+export const getPostsByFollowingIds = async ({
+  followingIds,
+  limit,
+  ctx,
+  cursor,
+  mode,
+}: GetPostsByFollowingIds) => {
+  return await ctx.prisma.post.findMany({
+    where: {
+      authorId: {
+        [mode]: followingIds,
+      },
+    },
+    take: limit + 1,
+    cursor: cursor ? { id: cursor } : undefined,
+    orderBy: {
+      createdAt: "desc",
+    },
+    include: {
+      author: {
+        select: {
+          bio: true,
+          followers: true,
+          id: true,
+          image: true,
+          name: true,
+          username: true,
+          posts: true,
+        },
+      },
+      images: true,
+      likes: true,
+      comments: true,
+    },
+  });
+};

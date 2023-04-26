@@ -192,6 +192,13 @@ export const postRouter = createTRPCRouter({
         });
       }
 
+      if (images.length === 0) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Post should contain at least 1 image",
+        });
+      }
+
       const post = await ctx.prisma.post.create({
         data: {
           caption,
@@ -234,6 +241,13 @@ export const postRouter = createTRPCRouter({
         });
       }
 
+      if (images.length === 0) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Post should contain at least 1 image",
+        });
+      }
+
       const post = await ctx.prisma.post.findUnique({
         where: {
           id: postId,
@@ -248,6 +262,13 @@ export const postRouter = createTRPCRouter({
           code: "NOT_FOUND",
           message: "Post couldn't be found.",
         });
+
+      if (post?.authorId !== ctx.session.user.id) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You're not authorized to do that.",
+        });
+      }
 
       const imagesToUpload = images.filter((image) =>
         image.src.includes("data:")
@@ -309,7 +330,7 @@ export const postRouter = createTRPCRouter({
       if (post.authorId !== ctx.session.user.id) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
-          message: "You're not authorized to do it.",
+          message: "You're not authorized to do that.",
         });
       }
 

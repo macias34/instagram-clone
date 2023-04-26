@@ -1,10 +1,10 @@
-import {
-  createTRPCRouter,
-  protectedProcedure,
-  publicProcedure,
-} from "~/server/api/trpc";
-import { TRPCError } from "@trpc/server";
+import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { z } from "zod";
+import {
+  getFollowingIds,
+  getPostsByFollowingIds,
+  getPostsWithData,
+} from "~/server/helpers/home";
 
 export const homeRouter = createTRPCRouter({
   getBatchPosts: publicProcedure
@@ -16,46 +16,15 @@ export const homeRouter = createTRPCRouter({
     )
     .query(async ({ input, ctx }) => {
       const { limit, cursor } = input;
+      const followingIds = await getFollowingIds(ctx);
 
-      const retrievedFollowings = await ctx.prisma.follower.findMany({
-        where: {
-          followerId: ctx.session?.user.id,
-        },
+      const posts = await getPostsByFollowingIds({
+        followingIds,
+        limit,
+        ctx,
+        cursor,
+        mode: "notIn",
       });
-      const followingIds = retrievedFollowings.map(
-        (following) => following.followedId
-      );
-      console.log("ids", followingIds);
-
-      const posts = await ctx.prisma.post.findMany({
-        where: {
-          authorId: {
-            notIn: followingIds,
-          },
-        },
-        take: limit + 1,
-        cursor: cursor ? { id: cursor } : undefined,
-        orderBy: {
-          createdAt: "desc",
-        },
-        include: {
-          author: {
-            select: {
-              bio: true,
-              followers: true,
-              id: true,
-              image: true,
-              name: true,
-              username: true,
-              posts: true,
-            },
-          },
-          images: true,
-          likes: true,
-          comments: true,
-        },
-      });
-      console.log(posts);
 
       let nextCursor: typeof cursor | undefined = undefined;
 
@@ -64,71 +33,7 @@ export const homeRouter = createTRPCRouter({
         nextCursor = nextItem?.id;
       }
 
-      const postsWithData = await Promise.all(
-        posts.map(async (post) => {
-          const commentUserIds = post.comments.map((comment) => comment.userId);
-          const commenters = await ctx.prisma.user.findMany({
-            where: {
-              id: {
-                in: commentUserIds,
-              },
-            },
-            select: {
-              id: true,
-              name: true,
-              username: true,
-              image: true,
-              followers: {
-                select: {
-                  followerId: true,
-                },
-              },
-            },
-          });
-
-          if (!commenters)
-            throw new TRPCError({
-              code: "INTERNAL_SERVER_ERROR",
-              message: "Unexpected error while getting commenters.",
-            });
-
-          const comments = post.comments.map((comment) => {
-            return {
-              ...comment,
-              commentAuthor: commenters.find(
-                (commenter) => commenter.id === comment.userId
-              ),
-            };
-          });
-
-          const likerIds = post.likes.map((like) => like.userId);
-
-          const likers = await ctx.prisma.user.findMany({
-            where: {
-              id: {
-                in: likerIds,
-              },
-            },
-            select: {
-              id: true,
-              name: true,
-              username: true,
-              image: true,
-              followers: {
-                select: {
-                  followerId: true,
-                },
-              },
-            },
-          });
-
-          return {
-            ...post,
-            comments,
-            likers,
-          };
-        })
-      );
+      const postsWithData = await getPostsWithData(posts, ctx);
 
       return {
         posts: postsWithData,
@@ -145,43 +50,14 @@ export const homeRouter = createTRPCRouter({
     )
     .query(async ({ input, ctx }) => {
       const { limit, cursor } = input;
+      const followingIds = await getFollowingIds(ctx);
 
-      const retrievedFollowings = await ctx.prisma.follower.findMany({
-        where: {
-          followerId: ctx.session?.user.id,
-        },
-      });
-      const followingIds = retrievedFollowings.map(
-        (following) => following.followedId
-      );
-
-      const posts = await ctx.prisma.post.findMany({
-        where: {
-          authorId: {
-            in: followingIds,
-          },
-        },
-        take: limit + 1,
-        cursor: cursor ? { id: cursor } : undefined,
-        orderBy: {
-          createdAt: "desc",
-        },
-        include: {
-          author: {
-            select: {
-              bio: true,
-              followers: true,
-              id: true,
-              image: true,
-              name: true,
-              username: true,
-              posts: true,
-            },
-          },
-          images: true,
-          likes: true,
-          comments: true,
-        },
+      const posts = await getPostsByFollowingIds({
+        followingIds,
+        limit,
+        ctx,
+        cursor,
+        mode: "in",
       });
 
       let nextCursor: typeof cursor | undefined = undefined;
@@ -191,71 +67,7 @@ export const homeRouter = createTRPCRouter({
         nextCursor = nextItem?.id;
       }
 
-      const postsWithData = await Promise.all(
-        posts.map(async (post) => {
-          const commentUserIds = post.comments.map((comment) => comment.userId);
-          const commenters = await ctx.prisma.user.findMany({
-            where: {
-              id: {
-                in: commentUserIds,
-              },
-            },
-            select: {
-              id: true,
-              name: true,
-              username: true,
-              image: true,
-              followers: {
-                select: {
-                  followerId: true,
-                },
-              },
-            },
-          });
-
-          if (!commenters)
-            throw new TRPCError({
-              code: "INTERNAL_SERVER_ERROR",
-              message: "Unexpected error while getting commenters.",
-            });
-
-          const comments = post.comments.map((comment) => {
-            return {
-              ...comment,
-              commentAuthor: commenters.find(
-                (commenter) => commenter.id === comment.userId
-              ),
-            };
-          });
-
-          const likerIds = post.likes.map((like) => like.userId);
-
-          const likers = await ctx.prisma.user.findMany({
-            where: {
-              id: {
-                in: likerIds,
-              },
-            },
-            select: {
-              id: true,
-              name: true,
-              username: true,
-              image: true,
-              followers: {
-                select: {
-                  followerId: true,
-                },
-              },
-            },
-          });
-
-          return {
-            ...post,
-            comments,
-            likers,
-          };
-        })
-      );
+      const postsWithData = await getPostsWithData(posts, ctx);
 
       return {
         posts: postsWithData,
