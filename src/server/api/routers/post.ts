@@ -5,10 +5,8 @@ import {
 } from "~/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { supabase } from "~/server/db";
-import { env } from "~/env.mjs";
-import { Image } from "@prisma/client";
-import { RouterOutputs } from "~/utils/api";
+import { Image, Post } from "@prisma/client";
+import { addImagesToPost } from "~/server/helpers/post";
 
 export const postRouter = createTRPCRouter({
   getPostById: publicProcedure
@@ -207,61 +205,7 @@ export const postRouter = createTRPCRouter({
         },
       });
 
-      const uploadedImages: Omit<Image, "id" | "createdAt">[] =
-        await Promise.all(
-          images.map(async (image) => {
-            const imagePath = post.id + "/" + image.name;
-            const imageBuffer = Buffer.from(
-              image.src.replace("data:", "").replace(/^.+,/, ""),
-              "base64"
-            );
-
-            const { data, error } = await supabase.storage
-              .from("images")
-              .upload(imagePath, imageBuffer, { contentType: "image" });
-
-            if (error)
-              throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: error.message,
-              });
-
-            return {
-              src: env.NEXT_PUBLIC_SUPABASE_IMAGES_URL + data?.path,
-              postId: post.id,
-              name: image.name,
-            };
-          })
-        );
-
-      const retrievedImages = await Promise.all(
-        uploadedImages.map(
-          async (image) => await ctx.prisma.image.create({ data: image })
-        )
-      );
-
-      if (!retrievedImages)
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message:
-            "Something when wrong while adding images to database. Please try again.",
-        });
-
-      const postWithImages = await ctx.prisma.post.update({
-        where: {
-          id: post.id,
-        },
-        data: {
-          ...post,
-          images: {
-            connect: retrievedImages.map((image) => {
-              return {
-                id: image.id,
-              };
-            }),
-          },
-        },
-      });
+      const postWithImages = await addImagesToPost({ images, post, ctx });
 
       return postWithImages;
     }),
@@ -335,56 +279,13 @@ export const postRouter = createTRPCRouter({
           );
       }
 
-      const uploadedImages: Omit<Image, "id" | "createdAt">[] =
-        await Promise.all(
-          imagesToUpload.map(async (image) => {
-            const imagePath = postId + "/" + image.name;
-            const imageBuffer = Buffer.from(
-              image.src.replace("data:", "").replace(/^.+,/, ""),
-              "base64"
-            );
-
-            const { data, error } = await supabase.storage
-              .from("images")
-              .upload(imagePath, imageBuffer, { contentType: "image" });
-
-            if (error)
-              throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: error.message,
-              });
-
-            return {
-              src: env.NEXT_PUBLIC_SUPABASE_IMAGES_URL + data?.path,
-              postId,
-              name: image.name,
-            };
-          })
-        );
-
-      const retrievedImages = await Promise.all(
-        uploadedImages.map(
-          async (image) => await ctx.prisma.image.create({ data: image })
-        )
-      );
-
-      const updatedPost = await ctx.prisma.post.update({
-        where: {
-          id: postId,
-        },
-        data: {
-          caption,
-          images: {
-            connect: retrievedImages.map((image) => {
-              return {
-                id: image.id,
-              };
-            }),
-          },
-        },
+      const postWithImages = await addImagesToPost({
+        images: imagesToUpload,
+        post: post as Post,
+        ctx,
       });
 
-      return updatedPost;
+      return postWithImages;
     }),
 
   deletePostById: protectedProcedure
@@ -412,54 +313,29 @@ export const postRouter = createTRPCRouter({
         });
       }
 
-      await ctx.prisma.like
-        .deleteMany({
-          where: {
-            postId,
-          },
-        })
-        .catch(
-          () =>
-            new TRPCError({
-              code: "INTERNAL_SERVER_ERROR",
-              message: "Something went wrong while deleting the post",
-            })
-        );
-
-      await ctx.prisma.comment
-        .deleteMany({
-          where: {
-            postId,
-          },
-        })
-        .catch(
-          () =>
-            new TRPCError({
-              code: "INTERNAL_SERVER_ERROR",
-              message: "Something went wrong while deleting the post",
-            })
-        );
-
-      await ctx.prisma.image
-        .deleteMany({
-          where: {
-            postId,
-          },
-        })
-        .catch(
-          () =>
-            new TRPCError({
-              code: "INTERNAL_SERVER_ERROR",
-              message: "Something went wrong while deleting the post",
-            })
-        );
-
-      await ctx.prisma.post
-        .delete({
-          where: {
-            id: postId,
-          },
-        })
+      await ctx.prisma
+        .$transaction([
+          ctx.prisma.like.deleteMany({
+            where: {
+              postId,
+            },
+          }),
+          ctx.prisma.comment.deleteMany({
+            where: {
+              postId,
+            },
+          }),
+          ctx.prisma.image.deleteMany({
+            where: {
+              postId,
+            },
+          }),
+          ctx.prisma.post.delete({
+            where: {
+              id: postId,
+            },
+          }),
+        ])
         .catch(
           () =>
             new TRPCError({

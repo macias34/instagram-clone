@@ -5,6 +5,17 @@ import { postRouter } from "./routers/post";
 import { commentRouter } from "./routers/comment";
 import { likeRouter } from "./routers/like";
 import { homeRouter } from "./routers/home";
+import { Session } from "next-auth";
+import { Prisma, PrismaClient } from "@prisma/client";
+
+export interface Context {
+  session: Session | null;
+  prisma: PrismaClient<
+    Prisma.PrismaClientOptions,
+    never,
+    Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined
+  >;
+}
 
 /**
  * This is the primary router for your server.
