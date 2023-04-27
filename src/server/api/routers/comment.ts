@@ -37,14 +37,20 @@ export const commentRouter = createTRPCRouter({
         },
       });
 
-      if (comment?.userId === ctx.session.user.id)
-        await ctx.prisma.comment
-          .delete({ where: { id: commentId } })
-          .catch((err) => {
-            throw new TRPCError({
-              code: "INTERNAL_SERVER_ERROR",
-              message: "Unexpected error happened while deleting comment.",
-            });
+      if (comment?.userId !== ctx.session.user.id) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You're not authorized to do that.",
+        });
+      }
+
+      await ctx.prisma.comment
+        .delete({ where: { id: commentId } })
+        .catch((err) => {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Unexpected error happened while deleting comment.",
           });
+        });
     }),
 });

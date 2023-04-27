@@ -7,6 +7,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { Image, Post } from "@prisma/client";
 import { addImagesToPost } from "~/server/helpers/post";
+import { getPostsWithData } from "~/server/helpers/home";
 
 export const postRouter = createTRPCRouter({
   getPostById: publicProcedure
@@ -22,7 +23,17 @@ export const postRouter = createTRPCRouter({
           images: true,
           likes: true,
           comments: true,
-          author: true,
+          author: {
+            select: {
+              name: true,
+              username: true,
+              image: true,
+              posts: true,
+              followers: true,
+              id: true,
+              bio: true,
+            },
+          },
         },
       });
 
@@ -32,65 +43,17 @@ export const postRouter = createTRPCRouter({
           message: "Post with this id doesn't exist.",
         });
 
-      const author = await ctx.prisma.user.findUnique({
-        where: {
-          id: post.authorId,
-        },
+      const postWithData = (await getPostsWithData([post], ctx))[0];
 
-        select: {
-          name: true,
-          username: true,
-          image: true,
-          posts: true,
-          followers: true,
-          id: true,
-        },
-      });
-
-      if (!author) {
+      if (!postWithData) {
         throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Author of this post wasn't found.",
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Something went wrong while getting data for the post.",
         });
       }
 
-      const commentUserIds = post.comments.map((comment) => comment.userId);
-      const commenters = await ctx.prisma.user.findMany({
-        where: {
-          id: {
-            in: commentUserIds,
-          },
-        },
-        select: {
-          id: true,
-          name: true,
-          username: true,
-          image: true,
-          followers: {
-            select: {
-              followerId: true,
-            },
-          },
-        },
-      });
-
-      if (!commenters)
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Unexpected error while getting commenters.",
-        });
-
-      const comments = post.comments.map((comment) => {
-        return {
-          ...comment,
-          commentAuthor: commenters.find(
-            (commenter) => commenter.id === comment.userId
-          ),
-        };
-      });
-
-      const description: (typeof comments)[0] = {
-        commentAuthor: author,
+      const description: (typeof postWithData.comments)[0] = {
+        commentAuthor: post.author,
         content: post.caption,
         id: post.id,
         postId: post.id,
@@ -99,32 +62,9 @@ export const postRouter = createTRPCRouter({
         userId: post.authorId,
       };
 
-      const likerIds = post.likes.map((like) => like.userId);
-
-      const likers = await ctx.prisma.user.findMany({
-        where: {
-          id: {
-            in: likerIds,
-          },
-        },
-        select: {
-          id: true,
-          name: true,
-          username: true,
-          image: true,
-          followers: {
-            select: {
-              followerId: true,
-            },
-          },
-        },
-      });
-
       return {
-        ...post,
-        author,
-        comments: [description, ...comments],
-        likers,
+        ...postWithData,
+        comments: [description, ...postWithData.comments],
       };
     }),
 
