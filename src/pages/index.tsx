@@ -43,7 +43,10 @@ const Home: NextPage = () => {
     refetchNonFollowings();
   };
 
-  const pages = [followingPosts?.pages, nonFollowingPosts?.pages];
+  const pages = [
+    hasNextFollowingsPage ? followingPosts?.pages : followingPosts?.pages,
+    nonFollowingPosts?.pages,
+  ]; // If there are any more posts from users you follow, display only this posts, if not display posts from users you follow and from who you don't
 
   if (isFollowingsPostsLoading || isNonFollowingsPostsLoading)
     return (
@@ -57,20 +60,20 @@ const Home: NextPage = () => {
   return (
     <RootLayout>
       <div className="flex w-full py-5 xl:py-10">
-        <div className="flex w-full">
+        <div className="flex w-full flex-col gap-5 px-5 xl:ml-48">
           <InfiniteScroll
-            className="flex flex-col items-center gap-5 px-5 xl:ml-48"
+            className="flex w-fit flex-col gap-5 "
             dataLength={2}
             next={
               hasNextFollowingsPage! ? fetchNextFollowingsPage : fetchNextPage
             }
             hasMore={hasNextFollowingsPage! || hasNextPage!}
+            loader={<span className="text-sm">Loading more posts..</span>}
             endMessage={
               <span className="text-sm">
-                You have no more posts to see. Try following more users.
+                You have already viewed all posts on this page! Amazing job 😎
               </span>
             }
-            loader={<span className="text-sm">Loading more posts..</span>}
           >
             {pages?.map((page) =>
               page?.map((nestedPage) =>

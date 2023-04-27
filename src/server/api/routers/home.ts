@@ -5,6 +5,7 @@ import {
   getPostsByFollowingIds,
   getPostsWithData,
 } from "~/server/helpers/home";
+import { TRPCError } from "@trpc/server";
 
 export const homeRouter = createTRPCRouter({
   getBatchPosts: publicProcedure
@@ -16,8 +17,8 @@ export const homeRouter = createTRPCRouter({
     )
     .query(async ({ input, ctx }) => {
       const { limit, cursor } = input;
-      const followingIds = await getFollowingIds(ctx);
 
+      const followingIds = await getFollowingIds(ctx);
       const posts = await getPostsByFollowingIds({
         followingIds,
         limit,
@@ -27,7 +28,6 @@ export const homeRouter = createTRPCRouter({
       });
 
       let nextCursor: typeof cursor | undefined = undefined;
-
       if (posts.length > limit) {
         const nextItem = posts.pop(); // return the last item from the array
         nextCursor = nextItem?.id;
