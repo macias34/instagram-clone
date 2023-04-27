@@ -60,9 +60,9 @@ const Home: NextPage = () => {
   return (
     <RootLayout>
       <div className="flex w-full py-5 xl:py-10">
-        <div className="flex w-full flex-col gap-5 px-5 xl:ml-48">
+        <div className="flex w-full flex-col gap-5 ">
           <InfiniteScroll
-            className="flex w-fit flex-col gap-5 "
+            className="flex w-fit flex-col gap-5 px-5 xl:ml-48"
             dataLength={2}
             next={
               hasNextFollowingsPage! ? fetchNextFollowingsPage : fetchNextPage
