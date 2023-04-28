@@ -5,7 +5,7 @@ import { supabase } from "../db";
 import { TRPCError } from "@trpc/server";
 import { env } from "~/env.mjs";
 
-interface AddImagesToPost {
+interface AddDataToPost {
   images: {
     name: string;
     src: string;
@@ -15,12 +15,12 @@ interface AddImagesToPost {
   caption?: string;
 }
 
-export const addImagesToPost = async ({
+export const addDataToPost = async ({
   images,
   post,
   caption,
   ctx,
-}: AddImagesToPost) => {
+}: AddDataToPost) => {
   const uploadedImages: Omit<Image, "id" | "createdAt">[] = await Promise.all(
     images.map(async (image) => {
       const imagePath = post.id + "/" + image.name;

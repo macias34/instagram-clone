@@ -6,7 +6,7 @@ import {
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { Image, Post } from "@prisma/client";
-import { addImagesToPost } from "~/server/helpers/post";
+import { addDataToPost } from "~/server/helpers/post";
 import { getPostsWithData } from "~/server/helpers/home";
 
 export const postRouter = createTRPCRouter({
@@ -152,7 +152,7 @@ export const postRouter = createTRPCRouter({
         },
       });
 
-      const postWithImages = await addImagesToPost({ images, post, ctx });
+      const postWithImages = await addDataToPost({ images, post, ctx });
 
       return postWithImages;
     }),
@@ -240,7 +240,7 @@ export const postRouter = createTRPCRouter({
           );
       }
 
-      const postWithImages = await addImagesToPost({
+      const postWithImages = await addDataToPost({
         images: imagesToUpload,
         post: post as Post,
         caption,
