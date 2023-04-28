@@ -7,8 +7,10 @@ import { PostProps } from "../post-content";
 import DeletePost from "./post-header/delete-post-dialog";
 import { BsThreeDots } from "react-icons/bs";
 import PostMenu from "./post-header/post-menu";
+import { useToast } from "~/hooks/use-toast";
 
 const PostHeader = ({ post }: PostProps) => {
+  const { toast } = useToast();
   const { data: sessionData } = useSession();
 
   const [isFollowed, setIsFollowed] = useState(
@@ -24,7 +26,16 @@ const PostHeader = ({ post }: PostProps) => {
     if (!sessionData) return;
 
     setIsFollowed((prevState) => !prevState);
-    toggleFollowInDb(post.authorId);
+    toggleFollowInDb(post.authorId, {
+      onError(error) {
+        toast({
+          title: "Something went wrong while toggling follow on the user.",
+          description: error.message,
+          duration: 3000,
+          variant: "destructive",
+        });
+      },
+    });
   };
 
   useEffect(() => {

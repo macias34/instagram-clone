@@ -88,6 +88,10 @@ const Creator = ({
         onSuccess(post) {
           setCreatorOpened(false);
           router.push("/p/" + post.id);
+          toast({
+            title: "Successfully created the post!",
+            duration: 3000,
+          });
         },
         onError(error) {
           setIsShareButtonDisabled(false);

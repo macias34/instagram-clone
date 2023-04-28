@@ -1,11 +1,11 @@
 import { type NextPage } from "next";
 import { Fragment, useState } from "react";
-import InfiniteScroll from "react-infinite-scroll-component";
 import Post from "~/components/home/post";
 import RootLayout from "~/components/layout";
 import LoadingSpinner from "~/components/ui/loading-spinner";
 import { Separator } from "~/components/ui/seperator";
 import { api } from "~/utils/api";
+import InfiniteScroll from "react-infinite-scroller";
 
 const Home: NextPage = () => {
   const {
@@ -51,7 +51,7 @@ const Home: NextPage = () => {
   if (isFollowingsPostsLoading || isNonFollowingsPostsLoading)
     return (
       <RootLayout>
-        <div className="flex h-full w-full items-center justify-center">
+        <div className="flex h-full w-full items-center justify-center max-xl:absolute max-xl:left-1/2 max-xl:top-1/2 max-xl:-translate-x-1/2 max-xl:-translate-y-1/2">
           <LoadingSpinner />
         </div>
       </RootLayout>
@@ -63,17 +63,14 @@ const Home: NextPage = () => {
         <div className="flex w-full flex-col gap-5 ">
           <InfiniteScroll
             className="flex w-fit flex-col gap-5 px-5 xl:ml-48"
-            dataLength={2}
-            next={
-              hasNextFollowingsPage! ? fetchNextFollowingsPage : fetchNextPage
+            pageStart={0}
+            loadMore={() =>
+              !hasNextFollowingsPage!
+                ? fetchNextPage()
+                : fetchNextFollowingsPage()
             }
             hasMore={hasNextFollowingsPage! || hasNextPage!}
             loader={<span className="text-sm">Loading more posts..</span>}
-            endMessage={
-              <span className="text-sm">
-                You have already viewed all posts on this page! Amazing job 😎
-              </span>
-            }
           >
             {pages?.map((page) =>
               page?.map((nestedPage) =>
@@ -84,6 +81,12 @@ const Home: NextPage = () => {
                   </Fragment>
                 ))
               )
+            )}
+
+            {!hasNextFollowingsPage! && !hasNextPage! && (
+              <span className="text-sm">
+                You have already viewed all posts on this page! Amazing job 😎
+              </span>
             )}
           </InfiniteScroll>
         </div>

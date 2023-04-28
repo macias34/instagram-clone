@@ -36,6 +36,10 @@ const DeletePostDialog = ({ post }: DeletePost) => {
       },
       onSuccess() {
         router.push(`/${post.author.username}`);
+        toast({
+          title: "Successfully deleted the post!",
+          duration: 3000,
+        });
       },
     });
   };

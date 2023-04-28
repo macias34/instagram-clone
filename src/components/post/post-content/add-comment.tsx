@@ -6,8 +6,10 @@ import { toFormikValidationSchema } from "zod-formik-adapter";
 import { api } from "~/utils/api";
 import { PostProps } from "../post-content";
 import { ChangeEvent, useState } from "react";
+import { useToast } from "~/hooks/use-toast";
 
 const AddComment = ({ post, refetch }: PostProps) => {
+  const { toast } = useToast();
   const { mutate: comment } = api.comment.commentPostById.useMutation();
   const [content, setContent] = useState("");
 
@@ -22,6 +24,14 @@ const AddComment = ({ post, refetch }: PostProps) => {
       {
         onSettled() {
           refetch();
+        },
+        onError(error) {
+          toast({
+            title: "Something went wrong while adding the comment.",
+            description: error.message,
+            duration: 3000,
+            variant: "destructive",
+          });
         },
       }
     );

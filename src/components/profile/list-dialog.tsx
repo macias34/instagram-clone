@@ -36,8 +36,8 @@ const ListDialog: FC<ListDialogProps> = ({
 
   return (
     <AlertDialog open={isDialogOpened}>
-      <AlertDialogContent className="relative max-w-sm gap-5 px-0 py-0">
-        <div className="flex w-full items-center justify-center border-b border-b-gray-300 py-3">
+      <AlertDialogContent className="max-w-sm gap-5 px-0 py-0 max-xl:max-w-sm max-xl:-translate-y-1/2 max-xl:rounded-lg">
+        <div className="relative flex w-full  items-center justify-center border-b border-b-gray-300 py-3">
           <span className="font-semibold capitalize">{mode}</span>
           <span
             onClick={() => setIsDialogOpened(false)}

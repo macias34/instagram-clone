@@ -12,11 +12,13 @@ interface AddImagesToPost {
   }[];
   post: Post;
   ctx: Context;
+  caption?: string;
 }
 
 export const addImagesToPost = async ({
   images,
   post,
+  caption,
   ctx,
 }: AddImagesToPost) => {
   const uploadedImages: Omit<Image, "id" | "createdAt">[] = await Promise.all(
@@ -64,6 +66,7 @@ export const addImagesToPost = async ({
     },
     data: {
       ...post,
+      caption: caption ? caption : post.caption,
       images: {
         connect: retrievedImages.map((image) => {
           return {

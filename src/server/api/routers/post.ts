@@ -243,6 +243,7 @@ export const postRouter = createTRPCRouter({
       const postWithImages = await addImagesToPost({
         images: imagesToUpload,
         post: post as Post,
+        caption,
         ctx,
       });
 

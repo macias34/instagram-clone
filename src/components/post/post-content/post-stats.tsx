@@ -5,10 +5,12 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import ListDialog from "~/components/profile/list-dialog";
+import { useToast } from "~/hooks/use-toast";
 
 dayjs.extend(relativeTime);
 
 const PostStats = ({ post, refetch }: PostProps) => {
+  const { toast } = useToast();
   const { data: sessionData } = useSession();
   const { mutate: like } = api.like.toggleLikePostById.useMutation();
   const [isLiked, setIsLiked] = useState(
@@ -28,6 +30,15 @@ const PostStats = ({ post, refetch }: PostProps) => {
     like(post.id, {
       onSettled() {
         refetch();
+      },
+
+      onError(error) {
+        toast({
+          title: "Something went wrong while toggling like on the post.",
+          description: error.message,
+          duration: 3000,
+          variant: "destructive",
+        });
       },
     });
   };

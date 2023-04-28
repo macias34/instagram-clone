@@ -1,4 +1,5 @@
 import { GetStaticProps, NextPage } from "next";
+import Link from "next/link";
 import RootLayout from "~/components/layout";
 import ImageSlider from "~/components/post/image-slider";
 import PostContent from "~/components/post/post-content";
@@ -14,11 +15,14 @@ const PostPage: NextPage<{ postId: string }> = ({ postId }) => {
     isLoading,
   } = api.post.getPostById.useQuery(postId);
 
-  if (!post || !post.images)
+  if (!post || !post.images || postError)
     return (
       <RootLayout>
-        <div className="flex h-full w-full items-center justify-center">
+        <div className="flex h-full w-full flex-col items-center justify-center gap-3 max-xl:absolute max-xl:left-1/2 max-xl:top-1/2 max-xl:-translate-x-1/2 max-xl:-translate-y-1/2">
           <h1>Post not found.</h1>
+          <Link className="font-semibold" href="/">
+            Go back to the home page
+          </Link>
         </div>
       </RootLayout>
     );
@@ -26,7 +30,7 @@ const PostPage: NextPage<{ postId: string }> = ({ postId }) => {
   if (isLoading)
     return (
       <RootLayout>
-        <div className="flex h-full w-full items-center justify-center">
+        <div className="flex h-full w-full items-center justify-center max-xl:absolute max-xl:left-1/2 max-xl:top-1/2 max-xl:-translate-x-1/2 max-xl:-translate-y-1/2">
           <LoadingSpinner />
         </div>
       </RootLayout>

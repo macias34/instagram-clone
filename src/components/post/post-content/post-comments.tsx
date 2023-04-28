@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { useSession } from "next-auth/react";
 import { RouterOutputs, api } from "~/utils/api";
 import { Session } from "next-auth";
+import { useToast } from "~/hooks/use-toast";
 
 dayjs.extend(relativeTime);
 
@@ -48,6 +49,7 @@ const Comment = ({ comment, deleteComment, postId, sessionData }: Comment) => {
 };
 
 const PostComments = ({ post, refetch }: PostProps) => {
+  const { toast } = useToast();
   const { data: sessionData } = useSession();
   const { mutate: deleteCommentFromDb } =
     api.comment.deleteCommentById.useMutation();
@@ -56,6 +58,14 @@ const PostComments = ({ post, refetch }: PostProps) => {
     deleteCommentFromDb(commentId, {
       onSettled() {
         refetch();
+      },
+      onError(error) {
+        toast({
+          title: "Something went wrong while deleting the comment.",
+          description: error.message,
+          duration: 3000,
+          variant: "destructive",
+        });
       },
     });
   };

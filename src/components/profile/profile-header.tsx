@@ -4,6 +4,7 @@ import { RouterOutputs, api } from "~/utils/api";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import ListDialog from "./list-dialog";
+import { useToast } from "~/hooks/use-toast";
 
 interface ProfileHeader {
   userData: RouterOutputs["user"]["getUserPublicDataByUsername"];
@@ -11,6 +12,7 @@ interface ProfileHeader {
 }
 
 const ProfileHeader = ({ userData, refetch }: ProfileHeader) => {
+  const { toast } = useToast();
   const { data: sessionData } = useSession();
   const { mutate: toggleFollowInDb } =
     api.user.toggleFollowByUserID.useMutation({
@@ -31,7 +33,16 @@ const ProfileHeader = ({ userData, refetch }: ProfileHeader) => {
     if (!sessionData) return;
 
     setIsFollowed((prevState) => !prevState);
-    toggleFollowInDb(userData.id);
+    toggleFollowInDb(userData.id, {
+      onError(error) {
+        toast({
+          title: "Something went wrong while toggling follow on the user.",
+          description: error.message,
+          duration: 3000,
+          variant: "destructive",
+        });
+      },
+    });
   };
 
   const showDialog = (mode: typeof dialogMode) => {

@@ -42,7 +42,7 @@ const AuthPage = () => {
     mutate(values, {
       onError(error, variables, context) {
         toast({
-          title: "Something went wrong!",
+          title: "Something went wrong while trying to sign up!",
           description: error.message,
           variant: "destructive",
         });

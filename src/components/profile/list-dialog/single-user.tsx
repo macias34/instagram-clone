@@ -5,6 +5,7 @@ import { useState } from "react";
 import { RouterOutputs } from "~/utils/api";
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
+import { useToast } from "~/hooks/use-toast";
 
 interface SingleUser {
   user: RouterOutputs["user"]["getUserPublicDataByUsername"]["followers"][0];
@@ -13,11 +14,20 @@ interface SingleUser {
 
 const SingleUser = ({ user, refetch }: SingleUser) => {
   const { data: sessionData } = useSession();
+  const { toast } = useToast();
 
   const { mutate: toggleFollowInDb } =
     api.user.toggleFollowByUserID.useMutation({
       onSettled() {
         refetch();
+      },
+      onError(error) {
+        toast({
+          title: "Something went wrong while toggling follow on the user.",
+          description: error.message,
+          duration: 3000,
+          variant: "destructive",
+        });
       },
     });
 

@@ -94,6 +94,10 @@ const PostEditor = ({ post: fetchedPost, setCreatorOpened }: PostEditor) => {
         onSuccess() {
           setCreatorOpened(false);
           router.push("/p/" + fetchedPost.id);
+          toast({
+            title: "Successfully edited the post!",
+            duration: 3000,
+          });
         },
         onError(error) {
           setIsShareButtonDisabled(false);

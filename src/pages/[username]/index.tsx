@@ -6,6 +6,7 @@ import { api } from "~/utils/api";
 import ProfileHeader from "~/components/profile/profile-header";
 import ProfileFeed from "~/components/profile/profile-feed";
 import LoadingSpinner from "~/components/ui/loading-spinner";
+import Link from "next/link";
 
 const ProfilePage: NextPage<{ username: string }> = ({ username }) => {
   const {
@@ -26,7 +27,7 @@ const ProfilePage: NextPage<{ username: string }> = ({ username }) => {
   if (isUserDataLoading || arePostsLoading)
     return (
       <RootLayout>
-        <div className="flex h-full w-full items-center justify-center">
+        <div className="flex h-full w-full items-center justify-center max-xl:absolute max-xl:left-1/2 max-xl:top-1/2 max-xl:-translate-x-1/2 max-xl:-translate-y-1/2">
           <LoadingSpinner />
         </div>
       </RootLayout>
@@ -35,8 +36,11 @@ const ProfilePage: NextPage<{ username: string }> = ({ username }) => {
   if (postsError || userDataError) {
     return (
       <RootLayout>
-        <div className="flex h-full w-full items-center justify-center">
+        <div className="flex h-full w-full flex-col items-center justify-center gap-3 max-xl:absolute max-xl:left-1/2 max-xl:top-1/2 max-xl:-translate-x-1/2 max-xl:-translate-y-1/2">
           <h1>No user with this username.</h1>
+          <Link className="font-semibold" href="/">
+            Go back to the home page
+          </Link>
         </div>
       </RootLayout>
     );
