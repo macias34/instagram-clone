@@ -4,9 +4,10 @@ import { Textarea } from "~/components/ui/textarea";
 import { Field } from "formik";
 import { ImageData } from "../creator";
 import Avatar from "~/components/profile/avatar";
-import EmojiPicker, { EmojiData } from "~/components/ui/emoji-picker";
+import EmojiPicker from "~/components/ui/emoji-picker";
 import PreviewImages from "./post-content/preview-images";
 import { PostProps } from "~/components/post/post-content";
+import useEmojiPicker from "~/hooks/use-emoji-picker";
 
 export interface PostContentStep {
   images: ImageData[];
@@ -19,12 +20,7 @@ const PostContentStep = ({ images, setImages, post }: PostContentStep) => {
   if (!sessionData) return <p>Something went wrong with session.</p>;
 
   const [caption, setCaption] = useState(post?.caption ? post.caption : "");
-
-  const handleEmojiSelect = (emojiData: EmojiData) => {
-    const { native } = emojiData;
-    if (caption.length <= 2198)
-      setCaption((prevState) => (prevState += native));
-  };
+  const { handleEmojiSelect } = useEmojiPicker();
 
   if (images && images.length > 0)
     return (
@@ -55,7 +51,13 @@ const PostContentStep = ({ images, setImages, post }: PostContentStep) => {
             <div className="flex justify-between py-4 pr-4 text-xs text-slate-400">
               <EmojiPicker
                 className=" -translate-x-[110%] translate-y-[-75%]"
-                handleEmojiSelect={handleEmojiSelect}
+                handleEmojiSelect={(emojiData) =>
+                  handleEmojiSelect({
+                    textToAppendEmoji: caption,
+                    setTextToAppendEmoji: setCaption,
+                    emojiData,
+                  })
+                }
               />
 
               <span>{caption.length}/2,200</span>

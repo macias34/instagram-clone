@@ -1,32 +1,17 @@
 import Picker from "@emoji-mart/react/";
-import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import useEmojiPicker, { EmojiData } from "~/hooks/use-emoji-picker";
 
-export interface EmojiData {
-  id: string;
-  name: string;
-  native: string;
-  unified: string;
-  keywords: string[];
-  shortcodes: string;
-}
-
-const fetchEmojis = async () => {
-  const res = await fetch("https://cdn.jsdelivr.net/npm/@emoji-mart/data");
-  return res.json();
-};
-
-const EmojiPicker = ({
-  handleEmojiSelect,
-  className,
-}: {
+interface EmojiPickerProps {
   handleEmojiSelect: (emojiData: EmojiData) => void;
   className: string;
-}) => {
-  const [emojiPickerOpened, setEmojiPickerOpened] = useState(false);
-  const { data } = useQuery(["emojis"], fetchEmojis);
+}
 
-  if (data)
+const EmojiPicker = ({ handleEmojiSelect, className }: EmojiPickerProps) => {
+  const [emojiPickerOpened, setEmojiPickerOpened] = useState(false);
+  const { emojis } = useEmojiPicker();
+
+  if (emojis)
     return (
       <>
         <button
@@ -51,7 +36,7 @@ const EmojiPicker = ({
           <div className={`absolute ${className}`}>
             <Picker
               theme="light"
-              data={data}
+              data={emojis}
               autoFocus={true}
               onEmojiSelect={handleEmojiSelect}
             />

@@ -1,13 +1,15 @@
 import { Field, Form, Formik } from "formik";
 import { Textarea } from "~/components/ui/textarea";
-import EmojiPicker, { EmojiData } from "~/components/ui/emoji-picker";
+import EmojiPicker from "~/components/ui/emoji-picker";
 import { z } from "zod";
 import { toFormikValidationSchema } from "zod-formik-adapter";
-import { ChangeEvent, useContext, useState } from "react";
+import { ChangeEvent } from "react";
 import useAddComment from "~/hooks/post/use-add-comment";
+import useEmojiPicker from "~/hooks/use-emoji-picker";
 
 const AddComment = () => {
   const { addComment, commentContent, setCommentContent } = useAddComment();
+  const { handleEmojiSelect } = useEmojiPicker();
 
   const initialValues = {
     content: "",
@@ -15,13 +17,6 @@ const AddComment = () => {
   const validationSchema = z.object({
     content: z.string().min(1).max(2200),
   });
-
-  const handleEmojiSelect = (emojiData: EmojiData) => {
-    const { native } = emojiData;
-    if (commentContent.length <= 2198) {
-      setCommentContent((prevContent) => (prevContent += native));
-    }
-  };
 
   return (
     <Formik
@@ -33,7 +28,13 @@ const AddComment = () => {
         <Form className="relative flex w-full items-center gap-4 p-3.5">
           <EmojiPicker
             className=" translate-x-[-2%] translate-y-[-60%]"
-            handleEmojiSelect={handleEmojiSelect}
+            handleEmojiSelect={(emojiData) =>
+              handleEmojiSelect({
+                textToAppendEmoji: commentContent,
+                setTextToAppendEmoji: setCommentContent,
+                emojiData,
+              })
+            }
           />
 
           <Field
