@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { AlertDialog, AlertDialogTrigger } from "../ui/alert-dialog";
-import { PostProps } from "../post/post-content";
 import PostEditor from "./post-editor";
 
-const PostEditorDialog = ({ post }: { post: PostProps["post"] }) => {
+const PostEditorDialog = () => {
   const [creatorOpened, setCreatorOpened] = useState<boolean>(false);
 
   return (
@@ -14,9 +13,7 @@ const PostEditorDialog = ({ post }: { post: PostProps["post"] }) => {
       >
         Edit post
       </AlertDialogTrigger>
-      {creatorOpened && (
-        <PostEditor post={post} setCreatorOpened={setCreatorOpened} />
-      )}
+      {creatorOpened && <PostEditor setCreatorOpened={setCreatorOpened} />}
     </AlertDialog>
   );
 };

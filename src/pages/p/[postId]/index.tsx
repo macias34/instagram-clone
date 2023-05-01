@@ -44,7 +44,7 @@ const PostPage: NextPage<{ postId: string }> = ({ postId }) => {
           <div className="flex h-full w-full flex-col border border-slate-300 xl:h-auto xl:flex-row">
             <ImageSlider images={post.images} />
             <div className="w-full xl:w-2/3">
-              <PostContent post={post} refetch={refetch} />
+              <PostContent />
             </div>
           </div>
         </div>

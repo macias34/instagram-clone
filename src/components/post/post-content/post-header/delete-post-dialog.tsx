@@ -9,40 +9,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
-import { api } from "~/utils/api";
-import { PostProps } from "../../post-content";
-import { useToast } from "~/hooks/use-toast";
-import { useRouter } from "next/router";
-import { useState } from "react";
+import useDeletePost from "~/hooks/post/use-delete-post";
 
-interface DeletePost {
-  post: PostProps["post"];
-}
-
-const DeletePostDialog = ({ post }: DeletePost) => {
-  const { mutate: deletePostInDb } = api.post.deletePostById.useMutation();
-  const { toast } = useToast();
-  const router = useRouter();
-
-  const deletePost = () => {
-    deletePostInDb(post.id, {
-      onError(error) {
-        toast({
-          title: "Error while trying to delete the post.",
-          description: error.message,
-          variant: "destructive",
-          duration: 3000,
-        });
-      },
-      onSuccess() {
-        router.push(`/${post.author.username}`);
-        toast({
-          title: "Successfully deleted the post!",
-          duration: 3000,
-        });
-      },
-    });
-  };
+const DeletePostDialog = () => {
+  const { deletePost } = useDeletePost();
 
   return (
     <AlertDialog>

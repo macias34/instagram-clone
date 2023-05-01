@@ -2,12 +2,14 @@ import { PostContext } from "contexts/post-context";
 import { useSession } from "next-auth/react";
 import { useContext, useEffect, useState } from "react";
 import { api } from "~/utils/api";
-import { toast, useToast } from "../use-toast";
+import { useToast } from "../use-toast";
 
 const usePostHeader = () => {
   const { post } = useContext(PostContext)!;
   const { data: sessionData } = useSession();
   const { toast } = useToast();
+
+  const isAuthor = post.authorId === sessionData?.user.id;
 
   const [isFollowed, setIsFollowed] = useState(
     post?.author?.followers.some(
@@ -48,6 +50,7 @@ const usePostHeader = () => {
   return {
     isFollowed,
     toggleFollow,
+    isAuthor,
   };
 };
 

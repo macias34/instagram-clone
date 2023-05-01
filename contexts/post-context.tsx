@@ -1,7 +1,7 @@
 import { createContext } from "react";
 import { RouterOutputs } from "~/utils/api";
 
-interface PostContextValues {
+export interface PostContextValues {
   post: RouterOutputs["post"]["getPostById"];
   refetch: () => void;
 }

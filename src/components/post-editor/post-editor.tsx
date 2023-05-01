@@ -1,6 +1,12 @@
 import { Separator } from "../ui/seperator";
 ImagesUploadStep;
-import { useState, useEffect, Dispatch, SetStateAction } from "react";
+import {
+  useState,
+  useEffect,
+  Dispatch,
+  SetStateAction,
+  useContext,
+} from "react";
 import PostContentStep from "../post-creator/steps/post-content";
 import DiscardPost from "../post-creator/discard-post";
 import {
@@ -17,7 +23,7 @@ import { useRouter } from "next/router";
 import { useToast } from "~/hooks/use-toast";
 import { ArrowLeft } from "lucide-react";
 import ImagesUploadStep from "../post-creator/steps/images-upload";
-import { PostProps } from "../post/post-content";
+import { PostContext } from "contexts/post-context";
 
 export interface ImageData {
   name: string;
@@ -27,10 +33,10 @@ export interface ImageData {
 
 interface PostEditor {
   setCreatorOpened: Dispatch<SetStateAction<boolean>>;
-  post: PostProps["post"];
 }
 
-const PostEditor = ({ post: fetchedPost, setCreatorOpened }: PostEditor) => {
+const PostEditor = ({ setCreatorOpened }: PostEditor) => {
+  const { post: fetchedPost } = useContext(PostContext)!;
   const router = useRouter();
   const { mutate: upload } = api.post.editPost.useMutation();
   const { toast } = useToast();

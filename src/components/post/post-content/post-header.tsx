@@ -7,9 +7,8 @@ import { PostContext } from "contexts/post-context";
 import usePostHeader from "~/hooks/post/use-post-header";
 
 const PostHeader = () => {
-  const { data: sessionData } = useSession();
   const { post } = useContext(PostContext)!;
-  const { isFollowed, toggleFollow } = usePostHeader();
+  const { isFollowed, toggleFollow, isAuthor } = usePostHeader();
 
   return (
     <div className="flex items-center justify-between border-b border-b-slate-200 px-3.5 py-3.5 text-sm  font-semibold">
@@ -18,7 +17,7 @@ const PostHeader = () => {
         <Link href={`/${post.author?.username}`}>
           <span>{post.author?.username}</span>
         </Link>
-        {post.authorId !== sessionData?.user.id && (
+        {!isAuthor && (
           <>
             {isFollowed ? (
               <span
@@ -39,7 +38,7 @@ const PostHeader = () => {
         )}
       </div>
 
-      {sessionData?.user.id === post.authorId && <PostMenu post={post} />}
+      {isAuthor && <PostMenu />}
     </div>
   );
 };
