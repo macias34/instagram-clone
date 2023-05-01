@@ -17,7 +17,7 @@ import { useRouter } from "next/router";
 import { useToast } from "~/hooks/use-toast";
 import { ArrowLeft } from "lucide-react";
 import ImagesUploadStep from "../post-creator/steps/images-upload";
-import { PostProps } from "./post-content";
+import { PostProps } from "../post/post-content";
 
 export interface ImageData {
   name: string;

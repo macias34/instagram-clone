@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AlertDialog, AlertDialogTrigger } from "../ui/alert-dialog";
+import { PostProps } from "../post/post-content";
 import PostEditor from "./post-editor";
-import { PostProps } from "./post-content";
 
 const PostEditorDialog = ({ post }: { post: PostProps["post"] }) => {
   const [creatorOpened, setCreatorOpened] = useState<boolean>(false);

@@ -1,50 +1,15 @@
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useContext } from "react";
 import Avatar from "~/components/profile/avatar";
-import { api } from "~/utils/api";
-import { PostProps } from "../post-content";
-import DeletePost from "./post-header/delete-post-dialog";
-import { BsThreeDots } from "react-icons/bs";
 import PostMenu from "./post-header/post-menu";
-import { useToast } from "~/hooks/use-toast";
+import { PostContext } from "contexts/post-context";
+import usePostHeader from "~/hooks/post/use-post-header";
 
-const PostHeader = ({ post }: PostProps) => {
-  const { toast } = useToast();
+const PostHeader = () => {
   const { data: sessionData } = useSession();
-
-  const [isFollowed, setIsFollowed] = useState(
-    post?.author?.followers.some(
-      (follower) => follower.followerId === sessionData?.user.id
-    )
-  );
-
-  const { mutate: toggleFollowInDb } =
-    api.user.toggleFollowByUserID.useMutation();
-
-  const toggleFollow = () => {
-    if (!sessionData) return;
-
-    setIsFollowed((prevState) => !prevState);
-    toggleFollowInDb(post.authorId, {
-      onError(error) {
-        toast({
-          title: "Something went wrong while toggling follow on the user.",
-          description: error.message,
-          duration: 3000,
-          variant: "destructive",
-        });
-      },
-    });
-  };
-
-  useEffect(() => {
-    setIsFollowed(
-      post?.author?.followers.some(
-        (follower) => follower.followerId === sessionData?.user.id
-      )
-    );
-  }, [sessionData]);
+  const { post } = useContext(PostContext)!;
+  const { isFollowed, toggleFollow } = usePostHeader();
 
   return (
     <div className="flex items-center justify-between border-b border-b-slate-200 px-3.5 py-3.5 text-sm  font-semibold">

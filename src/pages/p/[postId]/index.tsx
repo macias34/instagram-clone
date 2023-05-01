@@ -6,6 +6,7 @@ import PostContent from "~/components/post/post-content";
 import LoadingSpinner from "~/components/ui/loading-spinner";
 import { generateSSGHelper } from "~/server/helpers/ssgHelper";
 import { api } from "~/utils/api";
+import { PostContext } from "contexts/post-context";
 
 const PostPage: NextPage<{ postId: string }> = ({ postId }) => {
   const {
@@ -37,16 +38,18 @@ const PostPage: NextPage<{ postId: string }> = ({ postId }) => {
     );
 
   return (
-    <RootLayout>
-      <div className="flex h-full w-full flex-col items-center justify-center gap-14  xl:px-40 xl:py-10">
-        <div className="flex h-full w-full flex-col border border-slate-300 xl:h-auto xl:flex-row">
-          <ImageSlider images={post.images} />
-          <div className="w-full xl:w-2/3">
-            <PostContent post={post} refetch={refetch} />
+    <PostContext.Provider value={{ post, refetch }}>
+      <RootLayout>
+        <div className="flex h-full w-full flex-col items-center justify-center gap-14  xl:px-40 xl:py-10">
+          <div className="flex h-full w-full flex-col border border-slate-300 xl:h-auto xl:flex-row">
+            <ImageSlider images={post.images} />
+            <div className="w-full xl:w-2/3">
+              <PostContent post={post} refetch={refetch} />
+            </div>
           </div>
         </div>
-      </div>
-    </RootLayout>
+      </RootLayout>
+    </PostContext.Provider>
   );
 };
 

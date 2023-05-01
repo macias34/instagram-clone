@@ -4,11 +4,12 @@ import EmojiPicker, { EmojiData } from "~/components/ui/emoji-picker";
 import { z } from "zod";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 import { api } from "~/utils/api";
-import { PostProps } from "../post-content";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useContext, useState } from "react";
 import { useToast } from "~/hooks/use-toast";
+import { PostContext } from "contexts/post-context";
 
-const AddComment = ({ post, refetch }: PostProps) => {
+const AddComment = () => {
+  const { post, refetch } = useContext(PostContext)!;
   const { toast } = useToast();
   const { mutate: comment } = api.comment.commentPostById.useMutation();
   const [content, setContent] = useState("");

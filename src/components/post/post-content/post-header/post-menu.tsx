@@ -7,7 +7,7 @@ import {
 } from "~/components/ui/dropdown";
 import { PostProps } from "../../post-content";
 import DeletePostDialog from "./delete-post-dialog";
-import PostEditorDialog from "../../post-editor-dialog";
+import PostEditorDialog from "../../../post-editor/post-editor-dialog";
 
 interface PostMenuProps {
   post: PostProps["post"];

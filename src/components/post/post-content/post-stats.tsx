@@ -1,15 +1,16 @@
 import dayjs from "dayjs";
-import { PostProps } from "../post-content";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import ListDialog from "~/components/profile/list-dialog";
 import { useToast } from "~/hooks/use-toast";
+import { PostContext } from "contexts/post-context";
 
 dayjs.extend(relativeTime);
 
-const PostStats = ({ post, refetch }: PostProps) => {
+const PostStats = () => {
+  const { post, refetch } = useContext(PostContext)!;
   const { toast } = useToast();
   const { data: sessionData } = useSession();
   const { mutate: like } = api.like.toggleLikePostById.useMutation();
