@@ -1,52 +1,20 @@
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { useContext, useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
-import { api } from "~/utils/api";
 import ListDialog from "~/components/profile/list-dialog";
-import { useToast } from "~/hooks/use-toast";
 import { PostContext } from "contexts/post-context";
+import usePostStats from "~/hooks/post/use-post-stats";
 
 dayjs.extend(relativeTime);
 
 const PostStats = () => {
   const { post, refetch } = useContext(PostContext)!;
-  const { toast } = useToast();
-  const { data: sessionData } = useSession();
-  const { mutate: like } = api.like.toggleLikePostById.useMutation();
-  const [isLiked, setIsLiked] = useState(
-    post.likes.some((like) => like.userId === sessionData?.user.id)
-  );
-
+  const { toggleLike, isLiked } = usePostStats();
   const [isDialogOpened, setIsDialogOpened] = useState(false);
 
   const showDialog = () => {
     setIsDialogOpened(true);
   };
-
-  const onLike = () => {
-    if (isLiked) setIsLiked(false);
-    else setIsLiked(true);
-
-    like(post.id, {
-      onSettled() {
-        refetch();
-      },
-
-      onError(error) {
-        toast({
-          title: "Something went wrong while toggling like on the post.",
-          description: error.message,
-          duration: 3000,
-          variant: "destructive",
-        });
-      },
-    });
-  };
-
-  useEffect(() => {
-    setIsLiked(post.likes.some((like) => like.userId === sessionData?.user.id));
-  }, [post]);
 
   return (
     <>
@@ -62,7 +30,7 @@ const PostStats = () => {
         <div className="flex items-center gap-4">
           <span
             className="cursor-pointer transition hover:scale-110"
-            onClick={onLike}
+            onClick={toggleLike}
           >
             {isLiked ? (
               <svg
