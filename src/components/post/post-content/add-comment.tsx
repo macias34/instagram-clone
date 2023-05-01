@@ -3,56 +3,30 @@ import { Textarea } from "~/components/ui/textarea";
 import EmojiPicker, { EmojiData } from "~/components/ui/emoji-picker";
 import { z } from "zod";
 import { toFormikValidationSchema } from "zod-formik-adapter";
-import { api } from "~/utils/api";
 import { ChangeEvent, useContext, useState } from "react";
-import { useToast } from "~/hooks/use-toast";
-import { PostContext } from "contexts/post-context";
+import useAddComment from "~/hooks/post/use-add-comment";
 
 const AddComment = () => {
-  const { post, refetch } = useContext(PostContext)!;
-  const { toast } = useToast();
-  const { mutate: comment } = api.comment.commentPostById.useMutation();
-  const [content, setContent] = useState("");
+  const { addComment, commentContent, setCommentContent } = useAddComment();
 
   const initialValues = {
     content: "",
   };
-
-  const onAddComment = () => {
-    setContent("");
-    comment(
-      { id: post.id, content },
-      {
-        onSettled() {
-          refetch();
-        },
-        onError(error) {
-          toast({
-            title: "Something went wrong while adding the comment.",
-            description: error.message,
-            duration: 3000,
-            variant: "destructive",
-          });
-        },
-      }
-    );
-  };
-
   const validationSchema = z.object({
     content: z.string().min(1).max(2200),
   });
 
   const handleEmojiSelect = (emojiData: EmojiData) => {
     const { native } = emojiData;
-    if (content.length <= 2198) {
-      setContent((prevContent) => (prevContent += native));
+    if (commentContent.length <= 2198) {
+      setCommentContent((prevContent) => (prevContent += native));
     }
   };
 
   return (
     <Formik
       initialValues={initialValues}
-      onSubmit={onAddComment}
+      onSubmit={addComment}
       validationSchema={toFormikValidationSchema(validationSchema)}
     >
       {({ submitForm }) => (
@@ -66,9 +40,9 @@ const AddComment = () => {
             as={Textarea}
             spellCheck={false}
             name="content"
-            value={content}
+            value={commentContent}
             onInput={(e: ChangeEvent<HTMLInputElement>) =>
-              setContent(e.currentTarget.value)
+              setCommentContent(e.currentTarget.value)
             }
             maxLength={2200}
             placeholder="Add a comment"
@@ -76,7 +50,7 @@ const AddComment = () => {
           />
           <button
             onClick={submitForm}
-            disabled={content.length === 0}
+            disabled={commentContent.length === 0}
             className="bg-transparent font-semibold text-blue-600 hover:text-slate-800 disabled:text-blue-300"
           >
             Post
