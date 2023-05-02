@@ -3,7 +3,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { useContext, useState } from "react";
 import ListDialog from "~/components/profile/list-dialog";
 import { PostContext } from "contexts/post-context";
-import usePostStats from "~/hooks/post/use-post-stats";
+import usePostStats from "~/components/post/post-content/post-stats/use-post-stats";
 
 dayjs.extend(relativeTime);
 

@@ -1,4 +1,4 @@
-import { Separator } from "../ui/seperator";
+import { Separator } from "../../../../../ui/seperator";
 ImagesUploadStep;
 import {
   useState,
@@ -7,13 +7,13 @@ import {
   SetStateAction,
   useContext,
 } from "react";
-import PostContentStep from "../post-creator/steps/post-content";
-import DiscardPost from "../post-creator/discard-post";
+import PostContentStep from "../../../../../post-creator/steps/post-content";
+import DiscardPost from "../../../../../post-creator/discard-post";
 import {
   AlertDialogContent,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "../ui/alert-dialog";
+} from "../../../../../ui/alert-dialog";
 import { Form, Formik } from "formik";
 import { z } from "zod";
 import { toFormikValidationSchema } from "zod-formik-adapter";
@@ -22,7 +22,7 @@ import { file2Base64 } from "~/utils/files";
 import { useRouter } from "next/router";
 import { useToast } from "~/hooks/use-toast";
 import { ArrowLeft } from "lucide-react";
-import ImagesUploadStep from "../post-creator/steps/images-upload";
+import ImagesUploadStep from "../../../../../post-creator/steps/images-upload";
 import { PostContext } from "contexts/post-context";
 
 export interface ImageData {
@@ -31,11 +31,11 @@ export interface ImageData {
   src: string;
 }
 
-interface PostEditor {
+interface PostEditProps {
   setCreatorOpened: Dispatch<SetStateAction<boolean>>;
 }
 
-const PostEditor = ({ setCreatorOpened }: PostEditor) => {
+const PostEdit = ({ setCreatorOpened }: PostEditProps) => {
   const { post: fetchedPost } = useContext(PostContext)!;
   const router = useRouter();
   const { mutate: upload } = api.post.editPost.useMutation();
@@ -200,4 +200,4 @@ const PostEditor = ({ setCreatorOpened }: PostEditor) => {
   );
 };
 
-export default PostEditor;
+export default PostEdit;

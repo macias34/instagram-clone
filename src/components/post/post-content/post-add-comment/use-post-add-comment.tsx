@@ -1,9 +1,9 @@
 import { PostContext } from "contexts/post-context";
 import { useContext, useState } from "react";
-import { useToast } from "../use-toast";
+import { useToast } from "../../../../hooks/use-toast";
 import { api } from "~/utils/api";
 
-const useAddComment = () => {
+const usePostAddComment = () => {
   const { post, refetch } = useContext(PostContext)!;
   const { toast } = useToast();
   const { mutate: comment } = api.comment.commentPostById.useMutation();
@@ -36,4 +36,4 @@ const useAddComment = () => {
   };
 };
 
-export default useAddComment;
+export default usePostAddComment;

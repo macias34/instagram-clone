@@ -4,10 +4,10 @@ import { Textarea } from "~/components/ui/textarea";
 import { Field } from "formik";
 import { ImageData } from "../creator";
 import Avatar from "~/components/profile/avatar";
-import EmojiPicker from "~/components/ui/emoji-picker";
+import EmojiPicker from "~/components/ui/emoji-picker/emoji-picker";
 import PreviewImages from "./post-content/preview-images";
-import { PostProps } from "~/components/post/post-content";
-import useEmojiPicker from "~/hooks/use-emoji-picker";
+import { PostProps } from "~/components/post/post-content/post-content";
+import useEmojiPicker from "~/components/ui/emoji-picker/use-emoji-picker";
 
 export interface PostContentStep {
   images: ImageData[];

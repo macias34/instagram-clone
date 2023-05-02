@@ -1,7 +1,7 @@
 import { useSession } from "next-auth/react";
 import { PostContext } from "contexts/post-context";
 import { useContext } from "react";
-import Comment from "../post-comments/comment";
+import PostComment from "./post-comment/post-comment";
 
 const PostComments = () => {
   const { post } = useContext(PostContext)!;
@@ -12,7 +12,7 @@ const PostComments = () => {
       {post.comments.length > 0 ? (
         <>
           {post.comments.map((comment) => (
-            <Comment
+            <PostComment
               key={comment.id}
               comment={comment}
               sessionData={sessionData}

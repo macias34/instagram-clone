@@ -1,10 +1,10 @@
 import { PostContext } from "contexts/post-context";
 import { useContext } from "react";
 import { api } from "~/utils/api";
-import { useToast } from "../use-toast";
+import { useToast } from "../../../../../../hooks/use-toast";
 import { useRouter } from "next/router";
 
-const useDeletePost = () => {
+const usePostDelete = () => {
   const { post } = useContext(PostContext)!;
   const { mutate: deletePostInDb } = api.post.deletePostById.useMutation();
   const { toast } = useToast();
@@ -35,4 +35,4 @@ const useDeletePost = () => {
   };
 };
 
-export default useDeletePost;
+export default usePostDelete;

@@ -5,18 +5,18 @@ import { RouterOutputs, api } from "~/utils/api";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { PostContext } from "contexts/post-context";
 import { useContext } from "react";
-import useComment from "~/hooks/post/use-comment";
+import usePostComment from "./use-post-comment";
 
 dayjs.extend(relativeTime);
 
-interface Comment {
+interface PostCommentProps {
   sessionData: Session | null;
   comment: RouterOutputs["post"]["getPostById"]["comments"][0];
 }
 
-const Comment = ({ comment, sessionData }: Comment) => {
+const PostComment = ({ comment, sessionData }: PostCommentProps) => {
   const { post } = useContext(PostContext)!;
-  const { deleteComment } = useComment();
+  const { deleteComment } = usePostComment();
 
   return (
     <div key={comment.id} className="flex w-[95%] gap-3">
@@ -49,4 +49,4 @@ const Comment = ({ comment, sessionData }: Comment) => {
   );
 };
 
-export default Comment;
+export default PostComment;

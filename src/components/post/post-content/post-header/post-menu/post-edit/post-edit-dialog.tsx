@@ -1,8 +1,11 @@
 import { useState } from "react";
-import { AlertDialog, AlertDialogTrigger } from "../ui/alert-dialog";
-import PostEditor from "./post-editor";
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+} from "../../../../../ui/alert-dialog";
+import PostEditor from "./post-edit";
 
-const PostEditorDialog = () => {
+const PostEditDialog = () => {
   const [creatorOpened, setCreatorOpened] = useState<boolean>(false);
 
   return (
@@ -18,4 +21,4 @@ const PostEditorDialog = () => {
   );
 };
 
-export default PostEditorDialog;
+export default PostEditDialog;

@@ -1,9 +1,9 @@
 import { api } from "~/utils/api";
-import { useToast } from "../use-toast";
+import { useToast } from "../../../../../hooks/use-toast";
 import { PostContext } from "contexts/post-context";
 import { useContext } from "react";
 
-const useComment = () => {
+const usePostComment = () => {
   const { toast } = useToast();
   const { mutate: deleteCommentFromDb } =
     api.comment.deleteCommentById.useMutation();
@@ -30,4 +30,4 @@ const useComment = () => {
   };
 };
 
-export default useComment;
+export default usePostComment;

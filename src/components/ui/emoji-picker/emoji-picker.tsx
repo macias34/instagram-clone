@@ -1,6 +1,8 @@
 import Picker from "@emoji-mart/react/";
 import { useState } from "react";
-import useEmojiPicker, { EmojiData } from "~/hooks/use-emoji-picker";
+import useEmojiPicker, {
+  EmojiData,
+} from "~/components/ui/emoji-picker/use-emoji-picker";
 
 interface EmojiPickerProps {
   handleEmojiSelect: (emojiData: EmojiData) => void;

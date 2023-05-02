@@ -1,16 +1,13 @@
-import { FunctionComponent, useContext } from "react";
 import { BsThreeDots } from "react-icons/bs";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown";
-import DeletePostDialog from "./delete-post-dialog";
-import PostEditorDialog from "../../../post-editor/post-editor-dialog";
-import { PostContext } from "contexts/post-context";
+import PostEditDialog from "./post-edit/post-edit-dialog";
+import PostDelete from "./post-delete/post-delete";
 
 const PostMenu = () => {
-  const { post } = useContext(PostContext)!;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -18,11 +15,11 @@ const PostMenu = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="">
         <button className="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm font-medium outline-none focus:bg-slate-100 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 dark:focus:bg-slate-700">
-          <PostEditorDialog />
+          <PostEditDialog />
         </button>
 
         <button className="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm font-medium outline-none focus:bg-slate-100 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 dark:focus:bg-slate-700">
-          <DeletePostDialog />
+          <PostDelete />
         </button>
       </DropdownMenuContent>
     </DropdownMenu>

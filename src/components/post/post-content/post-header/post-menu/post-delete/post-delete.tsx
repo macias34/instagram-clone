@@ -9,10 +9,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
-import useDeletePost from "~/hooks/post/use-delete-post";
+import usePostDelete from "./use-post-delete";
 
-const DeletePostDialog = () => {
-  const { deletePost } = useDeletePost();
+const PostDelete = () => {
+  const { deletePost } = usePostDelete();
 
   return (
     <AlertDialog>
@@ -44,4 +44,4 @@ const DeletePostDialog = () => {
   );
 };
 
-export default DeletePostDialog;
+export default PostDelete;

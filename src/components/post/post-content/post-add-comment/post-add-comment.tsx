@@ -1,14 +1,14 @@
 import { Field, Form, Formik } from "formik";
 import { Textarea } from "~/components/ui/textarea";
-import EmojiPicker from "~/components/ui/emoji-picker";
+import EmojiPicker from "~/components/ui/emoji-picker/emoji-picker";
 import { z } from "zod";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 import { ChangeEvent } from "react";
-import useAddComment from "~/hooks/post/use-add-comment";
-import useEmojiPicker from "~/hooks/use-emoji-picker";
+import usePostAddComment from "./use-post-add-comment";
+import useEmojiPicker from "~/components/ui/emoji-picker/use-emoji-picker";
 
-const AddComment = () => {
-  const { addComment, commentContent, setCommentContent } = useAddComment();
+const PostAddComment = () => {
+  const { addComment, commentContent, setCommentContent } = usePostAddComment();
   const { handleEmojiSelect } = useEmojiPicker();
 
   const initialValues = {
@@ -62,4 +62,4 @@ const AddComment = () => {
   );
 };
 
-export default AddComment;
+export default PostAddComment;

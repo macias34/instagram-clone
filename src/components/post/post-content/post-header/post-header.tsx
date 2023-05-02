@@ -2,9 +2,9 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useContext } from "react";
 import Avatar from "~/components/profile/avatar";
-import PostMenu from "./post-header/post-menu";
+import PostMenu from "./post-menu/post-menu";
 import { PostContext } from "contexts/post-context";
-import usePostHeader from "~/hooks/post/use-post-header";
+import usePostHeader from "./use-post-header";
 
 const PostHeader = () => {
   const { post } = useContext(PostContext)!;
