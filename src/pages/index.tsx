@@ -1,11 +1,12 @@
 import { type NextPage } from "next";
 import { Fragment, useState } from "react";
-import Post from "~/components/home/post";
+import Post from "~/components/home/home-post/home-post";
 import RootLayout from "~/components/layout";
 import LoadingSpinner from "~/components/ui/loading-spinner";
 import { Separator } from "~/components/ui/seperator";
 import { api } from "~/utils/api";
 import InfiniteScroll from "react-infinite-scroller";
+import HomePost from "~/components/home/home-post/home-post";
 
 const Home: NextPage = () => {
   const {
@@ -76,7 +77,7 @@ const Home: NextPage = () => {
               page?.map((nestedPage) =>
                 nestedPage.posts.map((post) => (
                   <Fragment key={post.id}>
-                    <Post post={post} refetch={refetch} />
+                    <HomePost post={post} refetch={refetch} />
                     <Separator />
                   </Fragment>
                 ))
