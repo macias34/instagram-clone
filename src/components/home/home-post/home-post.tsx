@@ -3,10 +3,9 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
 import PostStats from "../../post/post-content/post-stats/post-stats";
 import PostImageSlider from "../../post/post-image-slider/post-image-slider";
-import Link from "next/link";
 import { PostContext } from "contexts/post-context";
 import HomePostHeader from "./home-post-header/home-post-header";
-import HomePostComments from "../home-post-comments/home-post-comments";
+import HomePostComments from "./home-post-comments/home-post-comments";
 dayjs.extend(relativeTime);
 
 interface HomePostProps {

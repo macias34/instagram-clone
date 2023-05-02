@@ -7,7 +7,7 @@ import Image from "next/image";
 import PostCreatorDialog from "~/components/post-creator/post-creator-dialog";
 import { FC, PropsWithChildren, useState } from "react";
 import Avatar from "./profile/avatar";
-import Search from "./home/search";
+import Search from "./home/search/search";
 import { LogOut } from "lucide-react";
 
 const Navbar: React.FC<{ sessionData: Session | null }> = ({ sessionData }) => {
