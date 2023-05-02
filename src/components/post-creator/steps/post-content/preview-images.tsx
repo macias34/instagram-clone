@@ -4,21 +4,28 @@ import Image from "next/image";
 import { ImageData } from "../../creator";
 import { PostContentStep } from "../post-content";
 import { useFormikContext } from "formik";
+import useImageSlider from "~/hooks/use-image-slider";
 
 const PreviewImages = ({ images, setImages }: PostContentStep) => {
-  const [currentPreviewedImage, setCurrentPreviewedImage] = useState(0);
+  const {
+    currentImage,
+    nextImage,
+    prevImage,
+    canGoNextImage,
+    canGoPrevImage,
+    goToImage,
+  } = useImageSlider(images);
   const { setFieldValue } = useFormikContext();
 
   const removePhoto = () => {
-    const imageToRemove = images[currentPreviewedImage];
+    const imageToRemove = images[currentImage];
     setImages((prevState) =>
       prevState.filter((image) => image.src !== imageToRemove?.src)
     );
     setFieldValue("images", images);
 
-    if (currentPreviewedImage !== 0)
-      setCurrentPreviewedImage(currentPreviewedImage - 1);
-    else setCurrentPreviewedImage(currentPreviewedImage + 1);
+    if (currentImage !== 0) goToImage(currentImage - 1);
+    else goToImage(currentImage + 1);
   };
 
   return (
@@ -31,7 +38,7 @@ const PreviewImages = ({ images, setImages }: PostContentStep) => {
           alt="Preview image"
           style={{ objectFit: "cover" }}
           className={`${
-            currentPreviewedImage !== index && "invisible"
+            currentImage !== index && "invisible"
           } brightness-110 xl:rounded-bl-lg`}
           fill
         />
@@ -45,20 +52,20 @@ const PreviewImages = ({ images, setImages }: PostContentStep) => {
         <Trash size={20} />
       </button>
 
-      {currentPreviewedImage < images.length - 1 && (
+      {canGoNextImage && (
         <button
           type="button"
-          onClick={() => setCurrentPreviewedImage((prevState) => prevState + 1)}
+          onClick={nextImage}
           className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-[rgba(0,0,0,0.65)] transition hover:bg-[rgba(0,0,0,0.5)]"
         >
           <ChevronRight className="text-white" />
         </button>
       )}
 
-      {currentPreviewedImage !== 0 && (
+      {canGoPrevImage && (
         <button
           type="button"
-          onClick={() => setCurrentPreviewedImage((prevState) => prevState - 1)}
+          onClick={prevImage}
           className="absolute left-2 top-1/2 flex h-8 w-8 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-[rgba(0,0,0,0.65)] transition hover:bg-[rgba(0,0,0,0.5)]"
         >
           <ChevronLeft className="text-white" />

@@ -1,14 +1,16 @@
+import { PostContext } from "contexts/post-context";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
-import { RouterOutputs } from "~/utils/api";
+import { useContext } from "react";
+import useImageSlider from "~/hooks/use-image-slider";
 
-const ImageSlider = ({
-  images,
-}: {
-  images: RouterOutputs["post"]["getPostById"]["images"];
-}) => {
-  const [currentPreviewedImage, setCurrentPreviewedImage] = useState(0);
+const PostImageSlider = () => {
+  const { post } = useContext(PostContext)!;
+  const { images } = post;
+
+  const { currentImage, nextImage, prevImage, canGoNextImage, canGoPrevImage } =
+    useImageSlider(images);
+
   return (
     <div className={`relative aspect-square w-full`}>
       {images.map((image, index) => (
@@ -19,23 +21,23 @@ const ImageSlider = ({
           alt="Preview image"
           style={{ objectFit: "cover" }}
           className={`${
-            currentPreviewedImage !== index && "invisible"
+            currentImage !== index && "invisible"
           } -z-10 brightness-110`}
           fill
         />
       ))}
-      {currentPreviewedImage < images.length - 1 && (
+      {canGoNextImage && (
         <div
-          onClick={() => setCurrentPreviewedImage((prevState) => prevState + 1)}
+          onClick={nextImage}
           className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-[rgba(0,0,0,0.65)] transition hover:bg-[rgba(0,0,0,0.5)]"
         >
           <ChevronRight className="text-white" />
         </div>
       )}
 
-      {currentPreviewedImage !== 0 && (
+      {canGoPrevImage && (
         <div
-          onClick={() => setCurrentPreviewedImage((prevState) => prevState - 1)}
+          onClick={prevImage}
           className="absolute left-2 top-1/2 flex h-8 w-8 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-[rgba(0,0,0,0.65)] transition hover:bg-[rgba(0,0,0,0.5)]"
         >
           <ChevronLeft className="text-white" />
@@ -45,4 +47,4 @@ const ImageSlider = ({
   );
 };
 
-export default ImageSlider;
+export default PostImageSlider;

@@ -1,10 +1,9 @@
 import { RouterOutputs } from "~/utils/api";
-import ImageSlider from "../post/image-slider";
 import Avatar from "../profile/avatar";
 import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
 import PostStats from "../post/post-content/post-stats/post-stats";
-import PostComments from "../post/post-content/post-comments/post-comments";
+import PostImageSlider from "../post/post-image-slider/post-image-slider";
 import Link from "next/link";
 
 dayjs.extend(relativeTime);
@@ -31,7 +30,7 @@ const Post = ({ post, refetch }: Post) => {
           </span>
         </Link>
       </div>
-      <ImageSlider images={post.images} />
+      <PostImageSlider images={post.images} />
       <div className="py-3.5">
         <PostStats />
       </div>

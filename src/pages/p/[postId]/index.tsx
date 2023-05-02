@@ -1,7 +1,7 @@
 import { GetStaticProps, NextPage } from "next";
 import Link from "next/link";
 import RootLayout from "~/components/layout";
-import ImageSlider from "~/components/post/image-slider";
+import ImageSlider from "~/components/post/post-image-slider/post-image-slider";
 import PostContent from "~/components/post/post-content/post-content";
 import LoadingSpinner from "~/components/ui/loading-spinner";
 import { generateSSGHelper } from "~/server/helpers/ssgHelper";
