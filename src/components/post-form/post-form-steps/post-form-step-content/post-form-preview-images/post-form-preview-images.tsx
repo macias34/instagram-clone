@@ -1,12 +1,12 @@
 import { useState, ChangeEvent } from "react";
 import { ChevronLeft, ChevronRight, Trash } from "lucide-react";
 import Image from "next/image";
-import { ImageData } from "../../creator";
-import { PostContentStep } from "../post-content";
+import { ImageData } from "../../../../post-create/post-create";
+import { PostContentStep } from "../post-form-step-content";
 import { useFormikContext } from "formik";
 import useImageSlider from "~/hooks/use-image-slider";
 
-const PreviewImages = ({ images, setImages }: PostContentStep) => {
+const PostFormPreviewImages = ({ images, setImages }: PostContentStep) => {
   const {
     currentImage,
     nextImage,
@@ -75,4 +75,4 @@ const PreviewImages = ({ images, setImages }: PostContentStep) => {
   );
 };
 
-export default PreviewImages;
+export default PostFormPreviewImages;

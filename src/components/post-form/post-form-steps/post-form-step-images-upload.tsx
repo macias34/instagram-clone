@@ -2,10 +2,10 @@ import { Button } from "~/components/ui/button";
 import { ChangeEvent, Dispatch, SetStateAction, useEffect } from "react";
 import { useToast } from "~/hooks/use-toast";
 import { useFormikContext } from "formik";
-import { ImageData } from "../creator";
+import { ImageData } from "../../post-create/post-create";
 import { createKey } from "next/dist/shared/lib/router/router";
 
-const ImagesUploadStep = ({
+const PostFormStepImagesUpload = ({
   setImages,
 }: {
   setImages: Dispatch<SetStateAction<ImageData[]>>;
@@ -108,4 +108,4 @@ const ImagesUploadStep = ({
   );
 };
 
-export default ImagesUploadStep;
+export default PostFormStepImagesUpload;

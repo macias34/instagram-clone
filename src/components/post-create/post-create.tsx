@@ -1,10 +1,57 @@
-import { useState, Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
+import { api } from "~/utils/api";
+import { file2Base64 } from "~/utils/files";
+import { useRouter } from "next/router";
+import { useToast } from "~/hooks/use-toast";
+import PostForm from "../post-form/post-form";
 import { AlertDialog, AlertDialogTrigger } from "../ui/alert-dialog";
 
-import Creator from "./creator";
+export interface ImageData {
+  name: string;
+  file?: File;
+  src: string;
+}
 
-const PostCreatorDialog = () => {
+const PostCreate = () => {
   const [creatorOpened, setCreatorOpened] = useState<boolean>(false);
+
+  const { toast } = useToast();
+  const router = useRouter();
+  const { mutateAsync: upload } = api.post.createPost.useMutation();
+
+  const createPost = async (post: { images: ImageData[]; caption: string }) => {
+    return await upload(
+      {
+        images: await Promise.all(
+          post.images.map(async (image) => {
+            return {
+              src: image.file ? await file2Base64(image.file) : image.src,
+              name: image.name,
+            };
+          })
+        ),
+        caption: post.caption,
+      },
+      {
+        onSuccess(post) {
+          setCreatorOpened(false);
+          router.push("/p/" + post.id);
+          toast({
+            title: "Successfully created the post!",
+            duration: 3000,
+          });
+        },
+        onError(error) {
+          toast({
+            title: "Something went wrong while adding the post.",
+            description: error.message,
+            duration: 3000,
+            variant: "destructive",
+          });
+        },
+      }
+    );
+  };
 
   return (
     <AlertDialog open={creatorOpened}>
@@ -56,9 +103,11 @@ const PostCreatorDialog = () => {
           <span className="hidden xl:inline">Create</span>
         </button>
       </AlertDialogTrigger>
-      {creatorOpened && <Creator setCreatorOpened={setCreatorOpened} />}
+      {creatorOpened && (
+        <PostForm onSubmit={createPost} setDialogOpened={setCreatorOpened} />
+      )}
     </AlertDialog>
   );
 };
 
-export default PostCreatorDialog;
+export default PostCreate;

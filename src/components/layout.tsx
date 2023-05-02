@@ -4,11 +4,11 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import LoadingSpinner from "~/components/ui/loading-spinner";
 import { Session } from "next-auth";
 import Image from "next/image";
-import PostCreatorDialog from "~/components/post-creator/post-creator-dialog";
 import { FC, PropsWithChildren, useState } from "react";
 import Avatar from "./profile/avatar";
 import Search from "./home/search/search";
 import { LogOut } from "lucide-react";
+import PostCreate from "./post-create/post-create";
 
 const Navbar: React.FC<{ sessionData: Session | null }> = ({ sessionData }) => {
   return (
@@ -52,7 +52,7 @@ const Navbar: React.FC<{ sessionData: Session | null }> = ({ sessionData }) => {
             </Link>
 
             <Search />
-            {sessionData && <PostCreatorDialog />}
+            {sessionData && <PostCreate />}
 
             {sessionData && (
               <Link

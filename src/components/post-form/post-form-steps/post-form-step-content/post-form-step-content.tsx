@@ -2,20 +2,20 @@ import { useState, ChangeEvent, Dispatch, SetStateAction } from "react";
 import { useSession } from "next-auth/react";
 import { Textarea } from "~/components/ui/textarea";
 import { Field } from "formik";
-import { ImageData } from "../creator";
+import { ImageData } from "../../../post-create/post-create";
 import Avatar from "~/components/profile/avatar";
 import EmojiPicker from "~/components/ui/emoji-picker/emoji-picker";
-import PreviewImages from "./post-content/preview-images";
-import { PostProps } from "~/components/post/post-content/post-content";
+import PostFormPreviewImages from "./post-form-preview-images/post-form-preview-images";
 import useEmojiPicker from "~/components/ui/emoji-picker/use-emoji-picker";
+import { Post } from "@prisma/client";
 
 export interface PostContentStep {
   images: ImageData[];
   setImages: Dispatch<SetStateAction<ImageData[]>>;
-  post?: PostProps["post"];
+  post?: Post;
 }
 
-const PostContentStep = ({ images, setImages, post }: PostContentStep) => {
+const PostFormStepContent = ({ images, setImages, post }: PostContentStep) => {
   const { data: sessionData } = useSession();
   if (!sessionData) return <p>Something went wrong with session.</p>;
 
@@ -25,7 +25,7 @@ const PostContentStep = ({ images, setImages, post }: PostContentStep) => {
   if (images && images.length > 0)
     return (
       <div className="flex h-full w-full flex-col xl:flex-row">
-        <PreviewImages setImages={setImages} images={images} />
+        <PostFormPreviewImages setImages={setImages} images={images} />
         <div className="flex h-full grow flex-col gap-4 pt-4">
           <div className="flex h-fit items-center gap-3 pl-4">
             <Avatar user={sessionData.user} />
@@ -70,4 +70,4 @@ const PostContentStep = ({ images, setImages, post }: PostContentStep) => {
   return <div />;
 };
 
-export default PostContentStep;
+export default PostFormStepContent;

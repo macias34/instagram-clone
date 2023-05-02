@@ -7,11 +7,11 @@ import {
   AlertDialogTrigger,
   AlertDialogDescription,
   AlertDialogFooter,
-} from "../ui/alert-dialog";
-import { ImageData } from "./creator";
+} from "../../ui/alert-dialog";
+import { ImageData } from "../../post-create/post-create";
 import { Dispatch, SetStateAction, useState } from "react";
 
-const DiscardPost = ({
+const PostFormDiscard = ({
   setCreatorOpened,
   images,
 }: {
@@ -62,4 +62,4 @@ const DiscardPost = ({
   );
 };
 
-export default DiscardPost;
+export default PostFormDiscard;
