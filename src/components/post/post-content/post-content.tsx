@@ -5,7 +5,7 @@ import PostAddComment from "./post-add-comment/post-add-comment";
 
 const PostContent = () => {
   return (
-    <div className="flex h-full grow flex-col">
+    <div className="flex h-full grow flex-col border-l">
       <PostHeader />
       <PostComments />
       <div className="p-3.5">
