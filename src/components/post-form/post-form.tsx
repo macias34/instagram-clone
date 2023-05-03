@@ -13,7 +13,7 @@ import usePostForm, { ImageData } from "./use-post-form";
 import { Separator } from "../ui/seperator";
 import { postSchema } from "./schemas/post-schema";
 import { Post } from "@prisma/client";
-import PostFormStepImagesUpload from "./post-form-steps/post-form-step-images-upload";
+import PostFormStepImagesUpload from "./post-form-steps/post-form-step-images-upload/post-form-step-images-upload";
 import PostFormStepContent from "./post-form-steps/post-form-step-content/post-form-step-content";
 
 interface PostFormValues {
