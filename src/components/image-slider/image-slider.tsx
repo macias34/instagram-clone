@@ -12,11 +12,12 @@ const ImageSlider: FC<ImageSliderProps> = ({ images }) => {
   const { currentImage, nextImage, prevImage, canGoNextImage, canGoPrevImage } =
     useImageSlider(images);
 
+  console.log(images);
   return (
     <div className={`relative aspect-square w-full`}>
       {images.map((image, index) => (
         <Image
-          key={image.id}
+          key={image.name}
           src={image.src}
           priority
           alt="Preview image"

@@ -14,7 +14,7 @@ const usePostForm = (images: ImageData[]) => {
   useEffect(() => {
     if (images && images.length > 0) setView("post-content");
     else setView("images-upload");
-  }, [images]);
+  }, [images.length]);
 
   return {
     view,
