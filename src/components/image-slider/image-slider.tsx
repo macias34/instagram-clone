@@ -24,6 +24,7 @@ const ImageSlider: FC<ImageSliderProps> = ({ images }) => {
           className={`${
             currentImage !== index && "invisible"
           } -z-10 brightness-110`}
+          sizes="100%"
           fill
         />
       ))}
