@@ -3,7 +3,7 @@ import { Button } from "~/components/ui/button";
 import { RouterOutputs, api } from "~/utils/api";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import ListDialog from "./list-dialog";
+import ListDialog, { ListUser } from "./list-dialog";
 import { useToast } from "~/hooks/use-toast";
 
 interface ProfileHeader {
@@ -28,6 +28,7 @@ const ProfileHeader = ({ userData, refetch }: ProfileHeader) => {
   const [dialogMode, setDialogMode] = useState<"followers" | "followings">(
     "followers"
   );
+  const [userList, setUserList] = useState<ListUser[]>([]);
 
   const toggleFollow = () => {
     if (!sessionData) return;
@@ -48,8 +49,10 @@ const ProfileHeader = ({ userData, refetch }: ProfileHeader) => {
   const showDialog = (mode: typeof dialogMode) => {
     if (mode === "followers") {
       setDialogMode("followers");
+      setUserList(userData.followers);
     } else if (mode === "followings") {
       setDialogMode("followings");
+      setUserList(userData.followings);
     }
 
     setIsDialogOpened(true);
@@ -67,11 +70,10 @@ const ProfileHeader = ({ userData, refetch }: ProfileHeader) => {
     <>
       <ListDialog
         refetch={refetch}
-        mode={dialogMode}
+        dialogLabel={dialogMode}
         isDialogOpened={isDialogOpened}
         setIsDialogOpened={setIsDialogOpened}
-        followers={userData.followers}
-        followings={userData.followings}
+        userList={userList}
       />
       <div className="flex flex-col items-center gap-5 px-5 xl:flex-row xl:items-start xl:gap-24 xl:pl-20 xl:pr-52">
         <Avatar user={userData} size={150} />

@@ -20,10 +20,10 @@ const PostStats = () => {
     <>
       <ListDialog
         refetch={refetch}
-        mode="likers"
+        dialogLabel="likers"
         isDialogOpened={isDialogOpened}
         setIsDialogOpened={setIsDialogOpened}
-        likers={post.likers}
+        userList={post.likers}
       />
 
       <div className="flex w-full flex-col gap-3">
