@@ -1,6 +1,6 @@
 import { GetStaticProps, NextPage } from "next";
 import Link from "next/link";
-import RootLayout from "~/components/layout";
+import RootLayout from "~/components/layout/layout";
 import LoadingSpinner from "~/components/ui/loading-spinner";
 import { generateSSGHelper } from "~/server/helpers/ssgHelper";
 import { api } from "~/utils/api";

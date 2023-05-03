@@ -1,20 +1,14 @@
 import { Button } from "~/components/ui/button";
-import { Formik, Form, ErrorMessage, Field } from "formik";
+import { Formik, Form } from "formik";
 import LabeledField from "~/components/ui/labeled-field";
 import { z } from "zod";
 import { toFormikValidationSchema } from "zod-formik-adapter";
-import { api } from "~/utils/api";
-import { useState } from "react";
-import { signIn } from "next-auth/react";
-import Link from "next/link";
-import { useToast } from "~/hooks/use-toast";
-import { useRouter } from "next/router";
-import Image from "next/image";
 
-interface CredentialsAuth {
-  username: string;
-  password: string;
-}
+import Link from "next/link";
+
+import Image from "next/image";
+import { CredentialsAuth } from "~/components/pages/auth/sign-in/use-sign-in-page";
+import useSignUpPage from "~/components/pages/auth/sign-up/use-sign-up-page";
 
 export const credentialsAuthValidationSchema = z.object({
   username: z
@@ -29,32 +23,11 @@ export const credentialsAuthValidationSchema = z.object({
 });
 
 const AuthPage = () => {
-  const { mutate, error } = api.auth.signUpWithCredentials.useMutation();
-  const { toast } = useToast();
-  const router = useRouter();
+  const { signUp } = useSignUpPage();
 
   const initialValues: CredentialsAuth = {
     username: "",
     password: "",
-  };
-
-  const onSubmit = async (values: CredentialsAuth) => {
-    mutate(values, {
-      onError(error, variables, context) {
-        toast({
-          title: "Something went wrong while trying to sign up!",
-          description: error.message,
-          variant: "destructive",
-        });
-      },
-      async onSuccess(data, variables, context) {
-        toast({
-          title: "Success!",
-          description: "You have succesfully signed up. You can sign in now.",
-        });
-        router.push("/auth");
-      },
-    });
   };
 
   return (
@@ -72,7 +45,7 @@ const AuthPage = () => {
 
           <Formik
             initialValues={initialValues}
-            onSubmit={onSubmit}
+            onSubmit={signUp}
             validationSchema={toFormikValidationSchema(
               credentialsAuthValidationSchema
             )}

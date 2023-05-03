@@ -1,46 +1,18 @@
 import { Button } from "~/components/ui/button";
 import { Formik, Form, ErrorMessage, Field } from "formik";
-import { z } from "zod";
-import { api } from "~/utils/api";
-import { useState } from "react";
-import { signIn } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { useToast } from "~/hooks/use-toast";
 import { Input } from "~/components/ui/input";
 import Image from "next/image";
-
-interface CredentialsAuth {
-  username: string;
-  password: string;
-}
+import { CredentialsAuth } from "~/components/pages/auth/sign-in/use-sign-in-page";
+import useSignInPage from "~/components/pages/auth/sign-in/use-sign-in-page";
 
 export const LoginForm = () => {
-  const router = useRouter();
-  const { toast } = useToast();
-
   const initialValues: CredentialsAuth = {
     username: "",
     password: "",
   };
 
-  const onSubmit = async (values: CredentialsAuth) => {
-    await signIn("credentials", {
-      username: values.username,
-      password: values.password,
-      redirect: false,
-    }).then((res) => {
-      if (!res) return null;
-
-      if (res.ok) router.push("/");
-      else
-        toast({
-          title: "Something went wrong!",
-          description: res.error,
-          variant: "destructive",
-        });
-    });
-  };
+  const { signIn_ } = useSignInPage();
 
   return (
     <div className="flex h-screen w-screen flex-col items-center justify-center">
@@ -55,7 +27,7 @@ export const LoginForm = () => {
             }
           />
 
-          <Formik initialValues={initialValues} onSubmit={onSubmit}>
+          <Formik initialValues={initialValues} onSubmit={signIn_}>
             <Form className="flex w-[260px] flex-col gap-2">
               <Field
                 as={Input}

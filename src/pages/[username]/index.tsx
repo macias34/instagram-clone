@@ -1,5 +1,5 @@
 import { GetStaticProps, NextPage } from "next";
-import RootLayout from "~/components/layout";
+import RootLayout from "~/components/layout/layout";
 import { Separator } from "~/components/ui/seperator";
 import { generateSSGHelper } from "~/server/helpers/ssgHelper";
 import { api } from "~/utils/api";

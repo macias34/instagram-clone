@@ -1,6 +1,6 @@
 import { type NextPage } from "next";
 import { Fragment, useState } from "react";
-import RootLayout from "~/components/layout";
+import RootLayout from "~/components/layout/layout";
 import LoadingSpinner from "~/components/ui/loading-spinner";
 import { Separator } from "~/components/ui/seperator";
 import { api } from "~/utils/api";

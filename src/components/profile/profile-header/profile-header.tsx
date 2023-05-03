@@ -1,70 +1,26 @@
 import Avatar from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { RouterOutputs, api } from "~/utils/api";
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import ListDialog, { ListUser } from "../../list-dialog/list-dialog";
-import { useToast } from "~/hooks/use-toast";
+import ListDialog from "../../list-dialog/list-dialog";
+import useProfileHeader from "./use-profile-header";
+import ProfileHeaderStats from "./profile-header-stats/profile-header-stats";
 
-interface ProfileHeader {
+export interface ProfileHeaderProps {
   userData: RouterOutputs["user"]["getUserPublicDataByUsername"];
   refetch: () => void;
 }
 
-const ProfileHeader = ({ userData, refetch }: ProfileHeader) => {
-  const { toast } = useToast();
-  const { data: sessionData } = useSession();
-  const { mutate: toggleFollowInDb } =
-    api.user.toggleFollowByUserID.useMutation({
-      onSettled() {
-        refetch();
-      },
-    });
-  const [isFollowed, setIsFollowed] = useState(
-    userData.followers.some((follower) => follower.id === sessionData?.user.id)
-  );
-
-  const [isDialogOpened, setIsDialogOpened] = useState(false);
-  const [dialogMode, setDialogMode] = useState<"followers" | "followings">(
-    "followers"
-  );
-  const [userList, setUserList] = useState<ListUser[]>([]);
-
-  const toggleFollow = () => {
-    if (!sessionData) return;
-
-    setIsFollowed((prevState) => !prevState);
-    toggleFollowInDb(userData.id, {
-      onError(error) {
-        toast({
-          title: "Something went wrong while toggling follow on the user.",
-          description: error.message,
-          duration: 3000,
-          variant: "destructive",
-        });
-      },
-    });
-  };
-
-  const showDialog = (mode: typeof dialogMode) => {
-    if (mode === "followers") {
-      setDialogMode("followers");
-      setUserList(userData.followers);
-    } else if (mode === "followings") {
-      setDialogMode("followings");
-      setUserList(userData.followings);
-    }
-
-    setIsDialogOpened(true);
-  };
-
-  useEffect(() => {
-    setIsFollowed(
-      userData.followers.some(
-        (follower) => follower.id === sessionData?.user.id
-      )
-    );
-  }, [userData.name]);
+const ProfileHeader = ({ userData, refetch }: ProfileHeaderProps) => {
+  const {
+    showDialog,
+    isAuthor,
+    toggleFollow,
+    isDialogOpened,
+    setIsDialogOpened,
+    dialogMode,
+    userList,
+    isFollowed,
+  } = useProfileHeader({ userData, refetch });
 
   return (
     <>
@@ -81,45 +37,19 @@ const ProfileHeader = ({ userData, refetch }: ProfileHeader) => {
           <div className="flex items-center gap-10">
             <span className="text-lg font-normal">{userData.username}</span>
             <div className="flex gap-2">
-              {sessionData?.user.name !== userData.username && (
-                <>
-                  <Button
-                    onClick={toggleFollow}
-                    variant={`${isFollowed ? "instagram" : "accent"}`}
-                    size="instagram"
-                  >
-                    {isFollowed ? "Unfollow" : "Follow"}
-                  </Button>
-                  <Button variant="instagram" size="instagram">
-                    Message
-                  </Button>
-                </>
+              {!isAuthor && (
+                <Button
+                  onClick={toggleFollow}
+                  variant={`${isFollowed ? "instagram" : "accent"}`}
+                  size="instagram"
+                >
+                  {isFollowed ? "Unfollow" : "Follow"}
+                </Button>
               )}
             </div>
           </div>
 
-          <div className="flex items-center gap-10">
-            <span className="text-base">
-              <span className="font-semibold">{userData.posts.length}</span>{" "}
-              {userData.posts.length !== 1 ? "posts" : "post"}
-            </span>
-            <span
-              onClick={() => showDialog("followers")}
-              className="cursor-pointer text-base"
-            >
-              <span className="font-semibold">{userData.followers.length}</span>{" "}
-              {userData.followers.length !== 1 ? "followers" : "follower"}
-            </span>
-            <span
-              onClick={() => showDialog("followings")}
-              className="cursor-pointer text-base"
-            >
-              <span className="font-semibold">
-                {userData.followings.length}
-              </span>{" "}
-              {userData.followers.length !== 1 ? "followings" : "following"}
-            </span>
-          </div>
+          <ProfileHeaderStats userData={userData} showDialog={showDialog} />
 
           <div className="flex flex-col gap-1 text-sm">
             <span className="font-semibold">{userData.name}</span>
