@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { useContext, useState } from "react";
-import ListDialog from "~/components/profile/list-dialog";
+import ListDialog from "~/components/profile/list-dialog/list-dialog";
 import { PostContext } from "contexts/post-context";
 import usePostStats from "~/components/post/post-content/post-stats/use-post-stats";
 

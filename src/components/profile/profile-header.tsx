@@ -3,7 +3,7 @@ import { Button } from "~/components/ui/button";
 import { RouterOutputs, api } from "~/utils/api";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import ListDialog, { ListUser } from "./list-dialog";
+import ListDialog, { ListUser } from "./list-dialog/list-dialog";
 import { useToast } from "~/hooks/use-toast";
 
 interface ProfileHeader {

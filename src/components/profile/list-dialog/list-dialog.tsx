@@ -1,9 +1,9 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { AlertDialog, AlertDialogContent } from "../ui/alert-dialog";
+import { AlertDialog, AlertDialogContent } from "../../ui/alert-dialog";
 import { RxCross1 } from "react-icons/rx";
 import { FC } from "react";
 import { RouterOutputs } from "~/utils/api";
-import UserList from "./user-list";
+import UserList from "../user-list";
 
 export type ListUser =
   RouterOutputs["user"]["getUserPublicDataByUsername"]["followers"][0];

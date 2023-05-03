@@ -1,5 +1,5 @@
 import { RouterOutputs } from "~/utils/api";
-import SingleUser from "./list-dialog/single-user";
+import SingleUser from "./list-dialog/single-user/single-user";
 
 interface UserList {
   users: RouterOutputs["user"]["getUserPublicDataByUsername"]["followers"];
