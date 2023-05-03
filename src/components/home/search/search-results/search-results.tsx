@@ -3,6 +3,7 @@ import { FC } from "react";
 import Link from "next/link";
 import Avatar from "~/components/ui/avatar";
 import LoadingSpinner from "~/components/ui/loading-spinner";
+import { DialogClose } from "@radix-ui/react-dialog";
 
 interface SearchResultsProps {
   users: RouterOutputs["home"]["searchForUsers"] | undefined;
@@ -27,13 +28,11 @@ const SearchResults: FC<SearchResultsProps> = ({
         {users && users.length > 0 && (
           <>
             {users.map((user) => (
-              <Link
-                href={`/${user.username}`}
-                className="flex items-center gap-3 rounded-xl p-2 transition hover:bg-slate-50"
-                key={Math.random()}
-              >
-                <Avatar user={user} size={44} />
-                <span className="text-sm font-semibold">{user.username}</span>
+              <Link href={`/${user.username}`} className="" key={user.id}>
+                <DialogClose className="flex h-full w-full items-center gap-3 rounded-xl p-2 transition hover:bg-slate-50">
+                  <Avatar user={user} size={44} />
+                  <span className="text-sm font-semibold">{user.username}</span>
+                </DialogClose>
               </Link>
             ))}
           </>
