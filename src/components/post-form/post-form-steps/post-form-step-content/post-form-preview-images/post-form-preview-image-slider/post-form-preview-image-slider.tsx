@@ -1,16 +1,34 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Trash } from "lucide-react";
 import Image from "next/image";
-import { FC } from "react";
+import { FC, Dispatch, SetStateAction } from "react";
 import useImageSlider from "~/components/image-slider/use-image-slider";
-import { ImageData } from "../post-form/use-post-form";
+import { ImageData } from "~/components/post-form/use-post-form";
+import usePostFormPreviewImages from "../use-post-form-preview-images";
 
-interface ImageSliderProps {
+interface PostFormPreviewImageSliderProps {
   images: ImageData[];
+  setImages: Dispatch<SetStateAction<ImageData[]>>;
 }
 
-const ImageSlider: FC<ImageSliderProps> = ({ images }) => {
-  const { currentImage, nextImage, prevImage, canGoNextImage, canGoPrevImage } =
-    useImageSlider(images);
+const PostFormPreviewImageSlider: FC<PostFormPreviewImageSliderProps> = ({
+  images,
+  setImages,
+}) => {
+  const {
+    currentImage,
+    nextImage,
+    prevImage,
+    canGoNextImage,
+    canGoPrevImage,
+    goToImage,
+  } = useImageSlider(images);
+
+  const { removeImage } = usePostFormPreviewImages({
+    images,
+    setImages,
+    currentImage,
+    goToImage,
+  });
 
   return (
     <div className={`relative aspect-square w-full`}>
@@ -27,6 +45,14 @@ const ImageSlider: FC<ImageSliderProps> = ({ images }) => {
           fill
         />
       ))}
+      <button
+        type="button"
+        onClick={removeImage}
+        className="absolute left-2 top-2 flex h-8 w-8 cursor-pointer  items-center justify-center rounded-full bg-[rgba(0,0,0,0.65)] text-white transition hover:bg-[rgba(0,0,0,0.5)]"
+      >
+        <Trash size={20} />
+      </button>
+
       {canGoNextImage && (
         <div
           onClick={nextImage}
@@ -48,4 +74,4 @@ const ImageSlider: FC<ImageSliderProps> = ({ images }) => {
   );
 };
 
-export default ImageSlider;
+export default PostFormPreviewImageSlider;

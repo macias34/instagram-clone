@@ -18,7 +18,9 @@ const HomePost = ({ post, refetch }: HomePostProps) => {
     <PostContext.Provider value={{ post, refetch }}>
       <div className="w-[90vw] xl:w-[34rem]">
         <HomePostHeader />
-        <ImageSlider images={post.images} />
+        <div>
+          <ImageSlider images={post.images} />
+        </div>
         <div className="py-3.5">
           <PostStats />
         </div>

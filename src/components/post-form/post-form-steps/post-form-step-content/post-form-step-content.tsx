@@ -1,6 +1,4 @@
-import { useState, ChangeEvent, Dispatch, SetStateAction } from "react";
-import { useSession } from "next-auth/react";
-import { Textarea } from "~/components/ui/textarea";
+import { Dispatch, SetStateAction } from "react";
 import PostFormPreviewImages from "./post-form-preview-images/post-form-preview-images";
 import { Post } from "@prisma/client";
 import { ImageData } from "../../use-post-form";

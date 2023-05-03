@@ -29,7 +29,7 @@ const usePostEdit = (fetchedPost: PostContextValues["post"]) => {
       {
         onSuccess() {
           setIsDialogOpened(false);
-          router.push("/p/" + fetchedPost.id);
+          router.reload();
           toast({
             title: "Successfully edited the post!",
             duration: 3000,
