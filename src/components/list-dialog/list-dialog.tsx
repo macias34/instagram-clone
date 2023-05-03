@@ -4,6 +4,7 @@ import { RxCross1 } from "react-icons/rx";
 import { FC } from "react";
 import { RouterOutputs } from "~/utils/api";
 import ListDialogUserList from "./list-dialog-user-list/user-list";
+import { ListDialogContext } from "contexts/list-dialog-context";
 
 export type ListUser =
   RouterOutputs["user"]["getUserPublicDataByUsername"]["followers"][0];
@@ -30,27 +31,29 @@ const ListDialog: FC<ListDialogProps> = ({
   }, [isDialogOpened]);
 
   return (
-    <AlertDialog open={isDialogOpened}>
-      <AlertDialogContent className="max-w-sm gap-5 px-0 py-0 max-xl:max-w-sm max-xl:-translate-y-1/2 max-xl:rounded-lg">
-        <div className="relative flex w-full  items-center justify-center border-b border-b-gray-300 py-3">
-          <span className="font-semibold capitalize">{dialogLabel}</span>
-          <span
-            onClick={() => setIsDialogOpened(false)}
-            className="absolute right-0 !my-0 mr-3 cursor-pointer !space-y-0"
-          >
-            <RxCross1 size={20} />
-          </span>
-        </div>
+    <ListDialogContext.Provider value={{ isDialogOpened, setIsDialogOpened }}>
+      <AlertDialog open={isDialogOpened}>
+        <AlertDialogContent className="max-w-sm gap-5 px-0 py-0 max-xl:max-w-sm max-xl:-translate-y-1/2 max-xl:rounded-lg">
+          <div className="relative flex w-full  items-center justify-center border-b border-b-gray-300 py-3">
+            <span className="font-semibold capitalize">{dialogLabel}</span>
+            <span
+              onClick={() => setIsDialogOpened(false)}
+              className="absolute right-0 !my-0 mr-3 cursor-pointer !space-y-0"
+            >
+              <RxCross1 size={20} />
+            </span>
+          </div>
 
-        <div className="flex h-[350px] w-full flex-col gap-5 overflow-x-auto px-5">
-          <ListDialogUserList
-            users={userList}
-            refetch={refetch}
-            emptyStateMessage="This post has no likes."
-          />
-        </div>
-      </AlertDialogContent>
-    </AlertDialog>
+          <div className="flex h-[350px] w-full flex-col gap-5 overflow-x-auto px-5">
+            <ListDialogUserList
+              users={userList}
+              refetch={refetch}
+              emptyStateMessage="This post has no likes."
+            />
+          </div>
+        </AlertDialogContent>
+      </AlertDialog>
+    </ListDialogContext.Provider>
   );
 };
 
