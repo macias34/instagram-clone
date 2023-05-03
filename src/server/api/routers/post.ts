@@ -97,7 +97,7 @@ export const postRouter = createTRPCRouter({
           comments: true,
         },
         orderBy: {
-          createdAt: "asc",
+          createdAt: "desc",
         },
       });
 
