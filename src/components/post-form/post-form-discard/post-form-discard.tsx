@@ -8,28 +8,27 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
 } from "../../ui/alert-dialog";
-import { ImageData } from "../../post-create/post-create";
 import { Dispatch, SetStateAction, useState } from "react";
+import usePostFormDiscard from "./use-post-form-discard";
+import { ImageData } from "../use-post-form";
+
+interface PostFormDiscardProps {
+  setCreatorOpened: Dispatch<SetStateAction<boolean>>;
+  images: ImageData[];
+}
 
 const PostFormDiscard = ({
   setCreatorOpened,
   images,
-}: {
-  setCreatorOpened: Dispatch<SetStateAction<boolean>>;
-  images: ImageData[];
-}) => {
-  const [discardPostOpened, setDiscardPostOpened] = useState(false);
-
-  const onDiscard = () => {
-    if (images && images.length > 0) {
-      images.map((image) => URL.revokeObjectURL(image.src));
-    }
-    setCreatorOpened(false);
-  };
+}: PostFormDiscardProps) => {
+  const { discard, isDialogOpened, setIsDialogOpened } = usePostFormDiscard(
+    setCreatorOpened,
+    images
+  );
 
   return (
-    <AlertDialog open={discardPostOpened}>
-      <AlertDialogTrigger onClick={() => setDiscardPostOpened(true)}>
+    <AlertDialog open={isDialogOpened}>
+      <AlertDialogTrigger onClick={() => setIsDialogOpened(true)}>
         <div title="Discard post" className="cursor-pointer">
           <ArrowLeft />
         </div>
@@ -45,14 +44,14 @@ const PostFormDiscard = ({
         </AlertDialogHeader>
         <AlertDialogFooter className="flex w-full !flex-col">
           <button
-            onClick={onDiscard}
+            onClick={discard}
             className="border-t border-t-slate-300 bg-white py-4 text-sm font-bold text-red-500 hover:bg-white"
           >
             Discard
           </button>
           <button
             className="!mx-0 border-t border-t-slate-300 py-4 text-sm font-normal"
-            onClick={() => setDiscardPostOpened(false)}
+            onClick={() => setIsDialogOpened(false)}
           >
             Cancel
           </button>
