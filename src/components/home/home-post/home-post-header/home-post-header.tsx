@@ -2,7 +2,7 @@ import { PostContext } from "contexts/post-context";
 import dayjs from "dayjs";
 import Link from "next/link";
 import { useContext } from "react";
-import Avatar from "~/components/profile/avatar";
+import Avatar from "~/components/ui/avatar";
 
 const HomePostHeader = () => {
   const { post } = useContext(PostContext)!;

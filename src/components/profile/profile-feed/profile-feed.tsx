@@ -5,7 +5,7 @@ import { AiFillHeart } from "react-icons/ai";
 import { FaComment } from "react-icons/fa";
 import { HiSquare2Stack } from "react-icons/hi2";
 import { BsCameraFill } from "react-icons/bs";
-import PostSquare from "./profile-feed/post-square";
+import PostSquare from "./post-square/post-square";
 
 const ProfileFeed = ({
   posts,

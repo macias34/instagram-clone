@@ -1,48 +1,29 @@
-import * as React from "react";
-import * as AvatarPrimitive from "@radix-ui/react-avatar";
+import { User } from "next-auth";
+import Image from "next/image";
+import { RouterOutputs } from "~/utils/api";
 
-import { cn } from "~/utils/cn";
+interface AvatarProps {
+  user: User | RouterOutputs["post"]["getPostById"]["author"];
+  size?: number;
+}
 
-const Avatar = React.forwardRef<
-  React.ElementRef<typeof AvatarPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root>
->(({ className, ...props }, ref) => (
-  <AvatarPrimitive.Root
-    ref={ref}
-    className={cn(
-      "relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full",
-      className
-    )}
-    {...props}
-  />
-));
-Avatar.displayName = AvatarPrimitive.Root.displayName;
+const Avatar = ({ user, size = 25 }: AvatarProps) => {
+  if (!user) return <div />;
 
-const AvatarImage = React.forwardRef<
-  React.ElementRef<typeof AvatarPrimitive.Image>,
-  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Image>
->(({ className, ...props }, ref) => (
-  <AvatarPrimitive.Image
-    ref={ref}
-    className={cn("aspect-square h-full w-full", className)}
-    {...props}
-  />
-));
-AvatarImage.displayName = AvatarPrimitive.Image.displayName;
+  return (
+    <Image
+      alt={`${user.name}'s image picture`}
+      style={{ height: size }}
+      src={
+        user.image
+          ? user.image
+          : "https://scontent-ord5-2.cdninstagram.com/v/t51.2885-19/44884218_345707102882519_2446069589734326272_n.jpg?_nc_ht=scontent-ord5-2.cdninstagram.com&_nc_cat=1&_nc_ohc=-L25Q8dbzSkAX-APwMO&edm=AEsR1pMBAAAA&ccb=7-5&ig_cache_key=YW5vbnltb3VzX3Byb2ZpbGVfcGlj.2-ccb7-5&oh=00_AfBSyPOTLrcPdKOYqzEtvWUUu99ANORZwYPVhH-xjxyp4w&oe=6438B70F&_nc_sid=3f45ac"
+      }
+      width={size}
+      height={size}
+      className="rounded-full border border-slate-400"
+    />
+  );
+};
 
-const AvatarFallback = React.forwardRef<
-  React.ElementRef<typeof AvatarPrimitive.Fallback>,
-  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback>
->(({ className, ...props }, ref) => (
-  <AvatarPrimitive.Fallback
-    ref={ref}
-    className={cn(
-      "flex h-full w-full items-center justify-center rounded-full bg-slate-100 dark:bg-slate-700",
-      className
-    )}
-    {...props}
-  />
-));
-AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName;
-
-export { Avatar, AvatarImage, AvatarFallback };
+export default Avatar;

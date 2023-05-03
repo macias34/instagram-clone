@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { Session } from "next-auth";
-import Avatar from "~/components/profile/avatar";
+import Avatar from "~/components/ui/avatar";
 import { RouterOutputs, api } from "~/utils/api";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { PostContext } from "contexts/post-context";

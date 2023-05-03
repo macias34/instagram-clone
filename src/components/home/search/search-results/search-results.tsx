@@ -1,7 +1,7 @@
 import { RouterOutputs } from "~/utils/api";
 import { FC } from "react";
 import Link from "next/link";
-import Avatar from "~/components/profile/avatar";
+import Avatar from "~/components/ui/avatar";
 import LoadingSpinner from "~/components/ui/loading-spinner";
 
 interface SearchResultsProps {

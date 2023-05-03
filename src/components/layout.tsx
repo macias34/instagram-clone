@@ -5,7 +5,7 @@ import LoadingSpinner from "~/components/ui/loading-spinner";
 import { Session } from "next-auth";
 import Image from "next/image";
 import { FC, PropsWithChildren, useState } from "react";
-import Avatar from "./profile/avatar";
+import Avatar from "./ui/avatar";
 import Search from "./home/search/search";
 import { LogOut } from "lucide-react";
 import PostCreate from "./post-create/post-create";

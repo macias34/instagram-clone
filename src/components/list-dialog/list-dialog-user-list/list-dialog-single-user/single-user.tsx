@@ -1,4 +1,4 @@
-import Avatar from "~/components/profile/avatar";
+import Avatar from "~/components/ui/avatar";
 import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
@@ -7,12 +7,12 @@ import { Button } from "~/components/ui/button";
 import Link from "next/link";
 import { useToast } from "~/hooks/use-toast";
 
-interface SingleUser {
+interface ListDialogSingleUserProps {
   user: RouterOutputs["user"]["getUserPublicDataByUsername"]["followers"][0];
   refetch: () => void;
 }
 
-const SingleUser = ({ user, refetch }: SingleUser) => {
+const ListDialogSingleUser = ({ user, refetch }: ListDialogSingleUserProps) => {
   const { data: sessionData } = useSession();
   const { toast } = useToast();
 
@@ -66,4 +66,4 @@ const SingleUser = ({ user, refetch }: SingleUser) => {
   );
 };
 
-export default SingleUser;
+export default ListDialogSingleUser;

@@ -3,10 +3,9 @@ import RootLayout from "~/components/layout";
 import { Separator } from "~/components/ui/seperator";
 import { generateSSGHelper } from "~/server/helpers/ssgHelper";
 import { api } from "~/utils/api";
-import ProfileHeader from "~/components/profile/profile-header";
-import ProfileFeed from "~/components/profile/profile-feed";
 import LoadingSpinner from "~/components/ui/loading-spinner";
 import Link from "next/link";
+import Profile from "~/components/profile/profile";
 
 const ProfilePage: NextPage<{ username: string }> = ({ username }) => {
   const {
@@ -48,11 +47,7 @@ const ProfilePage: NextPage<{ username: string }> = ({ username }) => {
 
   return (
     <RootLayout>
-      <div className="flex h-full flex-col gap-10 py-10 xl:gap-14 xl:px-40">
-        {userData && <ProfileHeader userData={userData} refetch={refetch} />}
-        <Separator />
-        {posts && <ProfileFeed posts={posts} />}
-      </div>
+      <Profile userData={userData} posts={posts} refetch={refetch} />
     </RootLayout>
   );
 };

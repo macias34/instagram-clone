@@ -2,7 +2,7 @@ import { Post } from "@prisma/client";
 import { Field } from "formik";
 import { useSession } from "next-auth/react";
 import { FunctionComponent, useState, ChangeEvent } from "react";
-import Avatar from "~/components/profile/avatar";
+import Avatar from "~/components/ui/avatar";
 import EmojiPicker from "~/components/ui/emoji-picker/emoji-picker";
 import useEmojiPicker from "~/components/ui/emoji-picker/use-emoji-picker";
 import { Textarea } from "~/components/ui/textarea";

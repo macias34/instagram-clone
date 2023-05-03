@@ -1,18 +1,22 @@
 import { RouterOutputs } from "~/utils/api";
-import SingleUser from "./list-dialog/single-user/single-user";
+import ListDialogSingleUser from "./list-dialog-single-user/single-user";
 
-interface UserList {
+interface ListDialogUserListProps {
   users: RouterOutputs["user"]["getUserPublicDataByUsername"]["followers"];
   emptyStateMessage: string;
   refetch: () => void;
 }
 
-const UserList = ({ users, emptyStateMessage, refetch }: UserList) => {
+const ListDialogUserList = ({
+  users,
+  emptyStateMessage,
+  refetch,
+}: ListDialogUserListProps) => {
   return (
     <div className="flex h-[350px] w-full flex-col gap-5 overflow-x-auto">
       {users && users.length > 0 ? (
         users.map((user) => (
-          <SingleUser refetch={refetch} key={user.id} user={user} />
+          <ListDialogSingleUser refetch={refetch} key={user.id} user={user} />
         ))
       ) : (
         <div className="absolute right-1/2 top-1/2 flex w-full -translate-y-1/2 translate-x-1/2 flex-col items-center justify-center gap-3">
@@ -24,4 +28,4 @@ const UserList = ({ users, emptyStateMessage, refetch }: UserList) => {
   );
 };
 
-export default UserList;
+export default ListDialogUserList;
