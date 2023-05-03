@@ -11,8 +11,6 @@ const usePostForm = (images: ImageData[]) => {
     "post-content"
   );
 
-  const [isShareButtonDisabled, setIsShareButtonDisabled] = useState(false);
-
   useEffect(() => {
     if (images && images.length > 0) setView("post-content");
     else setView("images-upload");
@@ -21,8 +19,6 @@ const usePostForm = (images: ImageData[]) => {
   return {
     view,
     setView,
-    isShareButtonDisabled,
-    setIsShareButtonDisabled,
   };
 };
 

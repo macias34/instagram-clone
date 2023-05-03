@@ -1,7 +1,5 @@
-import { useState, ChangeEvent } from "react";
 import { ChevronLeft, ChevronRight, Trash } from "lucide-react";
 import Image from "next/image";
-import { ImageData } from "../../../../post-create/post-create";
 import { PostContentStep } from "../post-form-step-content";
 import { useFormikContext } from "formik";
 import useImageSlider from "~/hooks/use-image-slider";

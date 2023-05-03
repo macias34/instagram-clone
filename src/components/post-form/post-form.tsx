@@ -25,18 +25,32 @@ interface PostFormProps {
   post?: PostContextValues["post"];
   onSubmit: (values: PostFormValues) => Promise<Post>;
   setDialogOpened: Dispatch<SetStateAction<boolean>>;
+  dialogLabel: string;
 }
 
-const PostForm: FC<PostFormProps> = ({ post, onSubmit, setDialogOpened }) => {
+const PostForm: FC<PostFormProps> = ({
+  post,
+  onSubmit,
+  setDialogOpened,
+  dialogLabel,
+}) => {
   const [images, setImages] = useState<ImageData[]>(
     post?.images ? post.images : []
   );
-  const { view, setView, isShareButtonDisabled, setIsShareButtonDisabled } =
-    usePostForm(images);
+  const [isShareButtonDisabled, setIsShareButtonDisabled] = useState(false);
+
+  const { view, setView } = usePostForm(images);
 
   const initialValues: PostFormValues = {
     images,
     caption: post?.caption ? post.caption : "",
+  };
+
+  const submitPostForm = async (post: PostFormValues) => {
+    setIsShareButtonDisabled(true);
+    await onSubmit({ images, caption: post.caption }).catch(() =>
+      setIsShareButtonDisabled(false)
+    );
   };
 
   return (
@@ -48,7 +62,7 @@ const PostForm: FC<PostFormProps> = ({ post, onSubmit, setDialogOpened }) => {
       <Formik
         initialValues={initialValues}
         validationSchema={toFormikValidationSchema(postSchema)}
-        onSubmit={(post) => onSubmit({ images, caption: post.caption })}
+        onSubmit={submitPostForm}
       >
         {({ submitForm }) => {
           return (
@@ -75,7 +89,7 @@ const PostForm: FC<PostFormProps> = ({ post, onSubmit, setDialogOpened }) => {
                   )}
 
                   <AlertDialogTitle className="absolute left-1/2 top-0 -translate-x-1/2 text-base">
-                    Edit post
+                    {dialogLabel}
                   </AlertDialogTitle>
 
                   {view === "images-upload" && images.length > 0 && (

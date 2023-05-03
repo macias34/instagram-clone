@@ -1,21 +1,19 @@
-import { PostContextValues } from "contexts/post-context";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import { useToast } from "~/hooks/use-toast";
 import { api } from "~/utils/api";
+import { ImageData } from "../post-form/use-post-form";
 import { file2Base64 } from "~/utils/files";
-import { useState } from "react";
-import { ImageData } from "~/components/post-form/use-post-form";
 
-const usePostEdit = (fetchedPost: PostContextValues["post"]) => {
+const usePostCreate = () => {
   const [isDialogOpened, setIsDialogOpened] = useState<boolean>(false);
-  const router = useRouter();
-  const { mutateAsync: upload } = api.post.editPost.useMutation();
   const { toast } = useToast();
+  const router = useRouter();
+  const { mutateAsync: upload } = api.post.createPost.useMutation();
 
-  const editPost = async (post: { images: ImageData[]; caption: string }) => {
+  const createPost = async (post: { images: ImageData[]; caption: string }) => {
     return await upload(
       {
-        postId: fetchedPost.id,
         images: await Promise.all(
           post.images.map(async (image) => {
             return {
@@ -27,11 +25,11 @@ const usePostEdit = (fetchedPost: PostContextValues["post"]) => {
         caption: post.caption,
       },
       {
-        onSuccess() {
+        onSuccess(post) {
           setIsDialogOpened(false);
-          router.push("/p/" + fetchedPost.id);
+          router.push("/p/" + post.id);
           toast({
-            title: "Successfully edited the post!",
+            title: "Successfully created the post!",
             duration: 3000,
           });
         },
@@ -48,10 +46,10 @@ const usePostEdit = (fetchedPost: PostContextValues["post"]) => {
   };
 
   return {
-    editPost,
+    createPost,
     isDialogOpened,
     setIsDialogOpened,
   };
 };
 
-export default usePostEdit;
+export default usePostCreate;
