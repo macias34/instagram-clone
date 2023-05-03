@@ -6,6 +6,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { PostContext } from "contexts/post-context";
 import { useContext } from "react";
 import usePostComment from "./use-post-comment";
+import Link from "next/link";
 
 dayjs.extend(relativeTime);
 
@@ -23,9 +24,12 @@ const PostComment = ({ comment, sessionData }: PostCommentProps) => {
       <Avatar user={comment} size={32} />
       <div className="flex flex-col gap-1">
         <span className="break-all">
-          <span className="mr-1.5 w-fit font-medium">
+          <Link
+            href={`/${comment.commentAuthor?.username}`}
+            className="mr-1.5 w-fit font-medium"
+          >
             {comment.commentAuthor?.username}
-          </span>
+          </Link>
           <span>{comment.content}</span>
         </span>
 
