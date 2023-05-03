@@ -1,13 +1,14 @@
-import { PostContext } from "contexts/post-context";
+import { PostContextValues } from "contexts/post-context";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
-import { useContext } from "react";
-import useImageSlider from "~/hooks/use-image-slider";
+import { FC } from "react";
+import useImageSlider from "~/components/image-slider/use-image-slider";
 
-const PostImageSlider = () => {
-  const { post } = useContext(PostContext)!;
-  const { images } = post;
+interface ImageSliderProps {
+  images: PostContextValues["post"]["images"];
+}
 
+const ImageSlider: FC<ImageSliderProps> = ({ images }) => {
   const { currentImage, nextImage, prevImage, canGoNextImage, canGoPrevImage } =
     useImageSlider(images);
 
@@ -47,4 +48,4 @@ const PostImageSlider = () => {
   );
 };
 
-export default PostImageSlider;
+export default ImageSlider;

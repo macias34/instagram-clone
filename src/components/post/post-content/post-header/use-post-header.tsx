@@ -2,7 +2,7 @@ import { PostContext } from "contexts/post-context";
 import { useSession } from "next-auth/react";
 import { useContext, useEffect, useState } from "react";
 import { api } from "~/utils/api";
-import { useToast } from "../../../../hooks/use-toast";
+import { useToast } from "~/hooks/use-toast";
 
 const usePostHeader = () => {
   const { post } = useContext(PostContext)!;

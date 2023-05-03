@@ -1,12 +1,11 @@
 import { GetStaticProps, NextPage } from "next";
 import Link from "next/link";
 import RootLayout from "~/components/layout";
-import ImageSlider from "~/components/post/post-image-slider/post-image-slider";
-import PostContent from "~/components/post/post-content/post-content";
 import LoadingSpinner from "~/components/ui/loading-spinner";
 import { generateSSGHelper } from "~/server/helpers/ssgHelper";
 import { api } from "~/utils/api";
 import { PostContext } from "contexts/post-context";
+import Post from "~/components/post/post";
 
 const PostPage: NextPage<{ postId: string }> = ({ postId }) => {
   const {
@@ -41,12 +40,7 @@ const PostPage: NextPage<{ postId: string }> = ({ postId }) => {
     <PostContext.Provider value={{ post, refetch }}>
       <RootLayout>
         <div className="flex h-full w-full flex-col items-center justify-center gap-14  xl:px-40 xl:py-10">
-          <div className="flex h-full w-full flex-col border border-slate-300 xl:h-auto xl:flex-row">
-            <ImageSlider />
-            <div className="w-full xl:w-2/3">
-              <PostContent />
-            </div>
-          </div>
+          <Post />
         </div>
       </RootLayout>
     </PostContext.Provider>
