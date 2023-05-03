@@ -1,9 +1,4 @@
-import Image from "next/image";
-import Link from "next/link";
-import { RouterOutputs, api } from "~/utils/api";
-import { AiFillHeart } from "react-icons/ai";
-import { FaComment } from "react-icons/fa";
-import { HiSquare2Stack } from "react-icons/hi2";
+import { RouterOutputs } from "~/utils/api";
 import { BsCameraFill } from "react-icons/bs";
 import PostSquare from "./post-square/post-square";
 

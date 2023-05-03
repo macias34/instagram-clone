@@ -3,16 +3,16 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { FC } from "react";
 import useImageSlider from "~/components/image-slider/use-image-slider";
+import { ImageData } from "../post-form/use-post-form";
 
 interface ImageSliderProps {
-  images: PostContextValues["post"]["images"];
+  images: ImageData[];
 }
 
 const ImageSlider: FC<ImageSliderProps> = ({ images }) => {
   const { currentImage, nextImage, prevImage, canGoNextImage, canGoPrevImage } =
     useImageSlider(images);
 
-  console.log(images);
   return (
     <div className={`relative aspect-square w-full`}>
       {images.map((image, index) => (
