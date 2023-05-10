@@ -64,6 +64,7 @@ const Home: NextPage = () => {
           <InfiniteScroll
             className="flex w-fit flex-col gap-5 px-5 xl:ml-48"
             pageStart={0}
+            threshold={1500}
             loadMore={() =>
               !hasNextFollowingsPage!
                 ? fetchNextPage()
