@@ -26,6 +26,7 @@ const config = {
     domains: [
       "1000logos.net",
       "scontent-ord5-2.cdninstagram.com",
+      "upload.wikimedia.org",
       "thumbs.dreamstime.com",
       "iaxaqvbtgrqwuxijlvfy.supabase.co",
     ],
